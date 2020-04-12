@@ -6,4 +6,4 @@ build_script:
 test_script:
 - ps: dotnet test -c Release /p:CollectCoverage=true
 artifacts:
-- path: clamav-net\src\ClamAV.Net\bin\Release\*.nupkg
+- path: \clamav-net\src\ClamAV.Net\bin\Release\*.nupkg
