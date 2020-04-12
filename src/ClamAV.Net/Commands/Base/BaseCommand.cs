@@ -15,7 +15,7 @@ namespace ClamAV.Net.Commands.Base
         {
             Name = name;
             mClamdCommandName =
-                Encoding.UTF8.GetBytes($"{Consts.COMMAND_PREFIX_CHARACTER}{Name}{Consts.TERMINATION_CHARACTER}");
+                Encoding.UTF8.GetBytes($"{Consts.COMMAND_PREFIX_CHARACTER}{Name}{(char)Consts.TERMINATION_BYTE}");
         }
         
         public virtual async Task WriteCommandAsync(Stream stream, CancellationToken cancellationToken = default)

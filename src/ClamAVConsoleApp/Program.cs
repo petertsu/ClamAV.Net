@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ClamAV.Net;
+using ClamAV.Net.Client;
 
 namespace ClamAVConsoleApp
 {
@@ -24,12 +25,15 @@ namespace ClamAVConsoleApp
               //  await clamAvClient.PingAsync();
 
                 var result = await clamAvClient.GetVersionAsync();
-
+                Console.WriteLine($"#{i}: {result.ProgramVersion} , {result.VirusDbVersion}");
 
                 using (HttpClient httpClient = new HttpClient())
-                using (Stream stream = await httpClient.GetStreamAsync("https://www.eicar.org/download/eicarcom2.zip"))
+                using (Stream stream = await httpClient.GetStreamAsync("http://www.eicar.org/download/eicar.com.txt?xxxx"))
                 {
-                    await clamAvClient.ScanDataAsync(stream);
+                    
+
+                   ScanResult res = await clamAvClient.ScanDataAsync(stream);
+                   Console.WriteLine($"#{i}: {res.Infected} , {res.VirusName}");
                 }
 
 
@@ -40,7 +44,7 @@ namespace ClamAVConsoleApp
                 //  await clamAvClient.ScanDataAsync(new MemoryStream(new byte[5]));
 
 
-                //Console.WriteLine($"#{i} {result.ProgramVersion} {result.VirusDBVersion}");
+                
             }
 
             Console.ReadKey();

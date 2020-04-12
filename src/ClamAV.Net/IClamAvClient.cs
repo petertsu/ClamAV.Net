@@ -11,6 +11,6 @@ namespace ClamAV.Net
 
         Task PingAsync(CancellationToken cancellationToken = default);
 
-        Task ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default);
+        Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default);
     }
 }

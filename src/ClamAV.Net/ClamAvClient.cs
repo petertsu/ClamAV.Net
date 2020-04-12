@@ -13,13 +13,13 @@ namespace ClamAV.Net
     {
         private readonly Uri mConnectionUri;
         private readonly IConnectionFactory mConnectionFactory;
-    
+
         public static IClamAvClient Create(Uri connectionUri)
         {
-             return new ClamAvClient(connectionUri,new ConnectionFactory());
+            return new ClamAvClient(connectionUri, new ConnectionFactory());
         }
 
-        private ClamAvClient(Uri connectionUri ,IConnectionFactory connectionFactory)
+        private ClamAvClient(Uri connectionUri, IConnectionFactory connectionFactory)
         {
             mConnectionUri = connectionUri;
             mConnectionFactory = connectionFactory;
@@ -27,34 +27,36 @@ namespace ClamAV.Net
 
         private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
         {
-            using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri,cancellationToken).ConfigureAwait(false))
+            using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
+                .ConfigureAwait(false))
             {
                 await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
             }
         }
 
+        private async Task<TResponse> SendCommand<TResponse>(ICommand<TResponse> command,
+            CancellationToken cancellationToken)
+        {
+            using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
+                .ConfigureAwait(false))
+            {
+                return await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
         public async Task<VersionResult> GetVersionAsync(CancellationToken cancellationToken = default)
         {
-            VersionCommand cmd = new VersionCommand();
-
-            await SendCommand(cmd, cancellationToken).ConfigureAwait(false);
-
-            return default;
+            return await SendCommand(new VersionCommand(), cancellationToken).ConfigureAwait(false);
         }
 
         public async Task PingAsync(CancellationToken cancellationToken = default)
         {
-            PingCommand cmd = new PingCommand();
-
-            await SendCommand(cmd, cancellationToken).ConfigureAwait(false);
+            await SendCommand(new PingCommand(), cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default)
+        public async Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default)
         {
-          
-            InStreamCommand cmd = new InStreamCommand(dataStream);
-
-            await SendCommand(cmd, cancellationToken).ConfigureAwait(false);
+            return await SendCommand(new InStreamCommand(dataStream), cancellationToken).ConfigureAwait(false);
         }
     }
 }
