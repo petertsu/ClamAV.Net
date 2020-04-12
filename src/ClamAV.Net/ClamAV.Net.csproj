@@ -4,6 +4,10 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>petertsu@github</Authors>
 		<Product>ClamAV.Net</Product>
+		<Version>0.1.0</Version>
+		<FileVersion>0.1.0</FileVersion>
+		<VersionSuffix>alpha</VersionSuffix>
+		<InformationalVersion>This is a prerelease package</InformationalVersion>
 	</PropertyGroup>
 	<PropertyGroup>
 		<PackageId>ClamAV.Net</PackageId>
