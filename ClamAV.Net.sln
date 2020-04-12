@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{BA92774B-F01E-
 		appveyor.yml = appveyor.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A7E49863-162E-4A8F-BF0B-C99F2E074D53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClamAV.Net.Tests", "tests\ClamAV.Net.Tests\ClamAV.Net.Tests.csproj", "{25A11D7F-083D-41FA-89BF-57717A0C6803}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +32,10 @@ Global
 		{44528828-B3A0-45B2-9292-0D783A1AFAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44528828-B3A0-45B2-9292-0D783A1AFAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44528828-B3A0-45B2-9292-0D783A1AFAC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25A11D7F-083D-41FA-89BF-57717A0C6803}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25A11D7F-083D-41FA-89BF-57717A0C6803}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25A11D7F-083D-41FA-89BF-57717A0C6803}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25A11D7F-083D-41FA-89BF-57717A0C6803}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,6 +43,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{659625EC-9834-4728-85EA-422B8E8F4DF2} = {20BC7063-5389-4D9E-B802-1C70D328A746}
 		{44528828-B3A0-45B2-9292-0D783A1AFAC8} = {20BC7063-5389-4D9E-B802-1C70D328A746}
+		{25A11D7F-083D-41FA-89BF-57717A0C6803} = {A7E49863-162E-4A8F-BF0B-C99F2E074D53}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC5A9FC9-9C1B-443A-BF53-2508B38FF723}
