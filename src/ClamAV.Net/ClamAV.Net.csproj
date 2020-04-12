@@ -1,10 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <Authors>petertsu</Authors>
-	  <Product>ClamAV.Net</Product>
-  </PropertyGroup>
-
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Authors>petertsu@github</Authors>
+		<Product>ClamAV.Net</Product>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PackageId>ClamAV.Net</PackageId>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://github.com/petertsu/ClamAV.Net</PackageProjectUrl>
+		<Description>The ClamAV server client</Description>
+		<PackageTags>clamav virus clam clamd</PackageTags>
+		<Authors>petertsu</Authors>
+	</PropertyGroup>
 </Project>
