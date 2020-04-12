@@ -1,11 +1,16 @@
-# ClamAV.Net
-ClamAV .net core client
+﻿using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using ClamAV.Net;
+using ClamAV.Net.Client;
 
-[![Build status](https://ci.appveyor.com/api/projects/status/uep7igf5d3p9kbg2?svg=true)](https://ci.appveyor.com/project/petertsu/clamav-net)
-
-
-```csharp
-
+namespace ClamAVConsoleApp
+{
+    internal static class Program
+    {
+        private static async Task Main(string[] args)
+        {
             IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:3310"));
 
             await clamAvClient.PingAsync();
@@ -24,4 +29,6 @@ ClamAV .net core client
 
                 Console.WriteLine($"Scan result : Infected - {res.Infected} , Virus name {res.VirusName}");
             }
-```
+        }
+    }
+}

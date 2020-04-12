@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Authors>petertsu@github</Authors>
+		<Product>ClamAV.Net</Product>
+		<Version>0.1.0</Version>
+		<FileVersion>0.1.0</FileVersion>
+		<VersionSuffix>alpha</VersionSuffix>
+		<InformationalVersion>This is a prerelease package</InformationalVersion>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PackageId>ClamAV.Net</PackageId>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://github.com/petertsu/ClamAV.Net</PackageProjectUrl>
+		<Description>The ClamAV server client</Description>
+		<PackageTags>clamav virus clam clamd</PackageTags>
+		<Authors>petertsu</Authors>
+	</PropertyGroup>
+</Project>
