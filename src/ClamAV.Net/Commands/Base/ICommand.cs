@@ -1,11 +1,12 @@
-﻿//using System.Threading;
-//using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
-//namespace ClamAV.Net.Commands
-//{
-//    internal interface ICommand
+namespace ClamAV.Net.Commands.Base
+{
+    internal interface ICommand
 
-//    {
-//        Task<TResponse> Execute(CancellationToken cancellationToken = default);
-//    }
-//}
+    {
+        Task WriteCommandAsync(Stream stream, CancellationToken cancellationToken = default);
+    }
+}

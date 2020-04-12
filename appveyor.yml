@@ -1,0 +1,5 @@
+version: 0.1.{build}
+image: Visual Studio 2019
+configuration: Release
+build_script:
+- ps: dotnet build -c Release

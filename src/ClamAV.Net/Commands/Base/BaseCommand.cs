@@ -6,7 +6,7 @@ using ClamAV.Net.ClamdProtocol;
 
 namespace ClamAV.Net.Commands.Base
 {
-    internal abstract class BaseCommand
+    internal abstract class BaseCommand : ICommand
     {
         public string Name { get; }
         private readonly byte[] mClamdCommandName;

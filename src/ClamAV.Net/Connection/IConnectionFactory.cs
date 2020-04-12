@@ -25,7 +25,7 @@ namespace ClamAV.Net.Connection
 
     internal interface IConnection : IDisposable
     {
-        Task SendCommandAsync(BaseCommand command, CancellationToken cancellationToken = default);
+        Task SendCommandAsync(ICommand command, CancellationToken cancellationToken = default);
     }
 
 }

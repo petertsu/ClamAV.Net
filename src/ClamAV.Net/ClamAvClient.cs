@@ -25,7 +25,7 @@ namespace ClamAV.Net
             mConnectionFactory = connectionFactory;
         }
 
-        private async Task SendCommand(BaseCommand command, CancellationToken cancellationToken)
+        private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
         {
             using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri,cancellationToken).ConfigureAwait(false))
             {

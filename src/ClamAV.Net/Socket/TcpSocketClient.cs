@@ -88,7 +88,7 @@ namespace ClamAV.Net.Socket
             mClient?.Dispose();
         }
 
-        public async Task SendCommandAsync(BaseCommand command, CancellationToken cancellationToken = default)
+        public async Task SendCommandAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             NetworkStream stream = mClient.GetStream();
             await command.WriteCommandAsync(stream, cancellationToken).ConfigureAwait(false);
