@@ -24,7 +24,7 @@ namespace ClamAVConsoleApp
            
               //  await clamAvClient.PingAsync();
 
-                var result = await clamAvClient.GetVersionAsync();
+                VersionResult result = await clamAvClient.GetVersionAsync();
                 Console.WriteLine($"#{i}: {result.ProgramVersion} , {result.VirusDbVersion}");
 
                 using (HttpClient httpClient = new HttpClient())
