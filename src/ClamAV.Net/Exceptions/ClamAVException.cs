@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ClamAV.Net.Exceptions
 {
@@ -7,7 +6,6 @@ namespace ClamAV.Net.Exceptions
     {
         internal ClamAVException(string message) : base(message)
         {
-
         }
 
         internal ClamAVException()
