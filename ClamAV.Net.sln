@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClamAV.Net", "src\ClamAV.Net\ClamAV.Net.csproj", "{659625EC-9834-4728-85EA-422B8E8F4DF2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20BC7063-5389-4D9E-B802-1C70D328A746}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClamAVConsoleApp", "ClamAVConsoleApp\ClamAVConsoleApp.csproj", "{44528828-B3A0-45B2-9292-0D783A1AFAC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{659625EC-9834-4728-85EA-422B8E8F4DF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{659625EC-9834-4728-85EA-422B8E8F4DF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{659625EC-9834-4728-85EA-422B8E8F4DF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{659625EC-9834-4728-85EA-422B8E8F4DF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44528828-B3A0-45B2-9292-0D783A1AFAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44528828-B3A0-45B2-9292-0D783A1AFAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44528828-B3A0-45B2-9292-0D783A1AFAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44528828-B3A0-45B2-9292-0D783A1AFAC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{659625EC-9834-4728-85EA-422B8E8F4DF2} = {20BC7063-5389-4D9E-B802-1C70D328A746}
+		{44528828-B3A0-45B2-9292-0D783A1AFAC8} = {20BC7063-5389-4D9E-B802-1C70D328A746}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BC5A9FC9-9C1B-443A-BF53-2508B38FF723}
+	EndGlobalSection
+EndGlobal
