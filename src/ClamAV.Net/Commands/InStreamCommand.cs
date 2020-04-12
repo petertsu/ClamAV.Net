@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace ClamAV.Net.Commands
             while ((numBytesRead = await mDataStream.ReadAsync(dataChunk, 0, dataChunk.Length, cancellationToken)
                 .ConfigureAwait(false)) > 0)
             {
-                byte[] dataChunkSize = BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(numBytesRead));
+                byte[] dataChunkSize = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(numBytesRead));
 
                 await stream.WriteAsync(dataChunkSize, 0, dataChunkSize.Length, cancellationToken)
                     .ConfigureAwait(false); //<length>
@@ -45,7 +46,7 @@ namespace ClamAV.Net.Commands
             CancellationToken cancellationToken = default)
         {
             if (rawResponse == null)
-                return Task.FromException<ScanResult>(new ClamAVException($"Raw response is null"));
+                return Task.FromException<ScanResult>(new ClamAvException("Raw response is null"));
 
             string actualResponse = Encoding.UTF8.GetString(rawResponse);
 
@@ -54,13 +55,13 @@ namespace ClamAV.Net.Commands
 
             if (!actualResponse.EndsWith("FOUND", StringComparison.OrdinalIgnoreCase))
                 return Task.FromException<ScanResult>(
-                    new ClamAVException($"Unexpected raw response '{actualResponse}'"));
+                    new ClamAvException($"Unexpected raw response '{actualResponse}'"));
            
             string[] responseParts = actualResponse.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
 
             if (responseParts.Length < 2)
                 return Task.FromException<ScanResult>(
-                    new ClamAVException($"Invalid raw response '{actualResponse}'"));
+                    new ClamAvException($"Invalid raw response '{actualResponse}'"));
 
             return Task.FromResult(new ScanResult(true, responseParts[1]));
 

@@ -19,7 +19,7 @@ namespace ClamAV.Net.Commands
             CancellationToken cancellationToken = default)
         {
             if (rawResponse == null)
-                return Task.FromException<VersionResult>(new ClamAVException($"Raw response is null"));
+                return Task.FromException<VersionResult>(new ClamAvException("Raw response is null"));
 
             string actualResponse = Encoding.UTF8.GetString(rawResponse);
 
@@ -28,7 +28,7 @@ namespace ClamAV.Net.Commands
 
             if (versions.Length < 2)
                 return Task.FromException<VersionResult>(
-                    new ClamAVException($"Unexpected raw response '{actualResponse}'"));
+                    new ClamAvException($"Unexpected raw response '{actualResponse}'"));
 
             VersionResult versionResult = new VersionResult(versions[0], versions[1]);
 

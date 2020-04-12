@@ -47,7 +47,7 @@ namespace ClamAV.Net.Tests.Commands
 
             byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
 
-            await Assert.ThrowsAsync<ClamAVException>(async () => await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
+            await Assert.ThrowsAsync<ClamAvException>(async () => await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
         }
 
         [Fact]

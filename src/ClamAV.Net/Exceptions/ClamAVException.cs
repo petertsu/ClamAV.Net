@@ -2,17 +2,17 @@
 
 namespace ClamAV.Net.Exceptions
 {
-    public class ClamAVException : Exception
+    public class ClamAvException : Exception
     {
-        internal ClamAVException(string message) : base(message)
+        internal ClamAvException(string message) : base(message)
         {
         }
 
-        internal ClamAVException()
+        internal ClamAvException()
         {
         }
 
-        internal ClamAVException(string message, Exception innerException) : base(message, innerException)
+        internal ClamAvException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

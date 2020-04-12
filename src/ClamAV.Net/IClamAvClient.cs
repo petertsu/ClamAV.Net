@@ -14,7 +14,7 @@ namespace ClamAV.Net
         /// </summary>
         /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <returns>VersionResult</returns>
-        /// <exception cref="ClamAVException">Thrown when command failed</exception>
+        /// <exception cref="ClamAvException">Thrown when command failed</exception>
         Task<VersionResult> GetVersionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace ClamAV.Net
         /// Run PING command on the ClamAV server
         /// </summary>
         /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
-        /// <exception cref="ClamAVException">Thrown when command failed</exception>
+        /// <exception cref="ClamAvException">Thrown when command failed</exception>
         Task PingAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ClamAV.Net
         /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <param name="dataStream">Data stream to scan. The stream should support read operation</param>
         /// <returns>ScanResult</returns>
-        /// <exception cref="ClamAVException">Thrown when command failed</exception>
+        /// <exception cref="ClamAvException">Thrown when command failed</exception>
         Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default);
     }
 }
