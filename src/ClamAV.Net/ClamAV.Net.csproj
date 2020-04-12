@@ -8,6 +8,9 @@
 		<FileVersion>0.1.0</FileVersion>
 		<VersionSuffix>alpha</VersionSuffix>
 		<InformationalVersion>This is a prerelease package</InformationalVersion>
+		<RepositoryUrl>https://github.com/petertsu/ClamAV.Net</RepositoryUrl>
+		<PackageLicenseUrl>https://github.com/petertsu/ClamAV.Net/blob/master/LICENSE</PackageLicenseUrl>
+		<Title>The ClamAV server client</Title>
 	</PropertyGroup>
 	<PropertyGroup>
 		<PackageId>ClamAV.Net</PackageId>
