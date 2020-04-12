@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ClamAV.Net.ClamdProtocol;
 using ClamAV.Net.Commands;
+using ClamAV.Net.Exceptions;
 using FluentAssertions;
 using Xunit;
 
@@ -31,6 +32,34 @@ namespace ClamAV.Net.Tests.Commands
 
             actual.Should()
                 .Be($"{Consts.COMMAND_PREFIX_CHARACTER}{pingCommand.Name}{(char)Consts.TERMINATION_BYTE}");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("DATA")]
+        [InlineData("PONG\0")]
+
+        public async Task ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_exception(string rawData)
+        {
+            PingCommand pingCommand = new PingCommand();
+
+            byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
+
+            await Assert.ThrowsAsync<ClamAVException>(async () => await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
+        }
+
+        [Fact]
+        public async Task ProcessRawResponseAsync_Valid_Raw_Data_Should_Return_PONG()
+        {
+            PingCommand pingCommand = new PingCommand();
+
+            byte[] rawBytes = Encoding.UTF8.GetBytes("PONG");
+
+            string actual =await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false);
+
+            actual.Should().Be("PONG");
         }
     }
 }

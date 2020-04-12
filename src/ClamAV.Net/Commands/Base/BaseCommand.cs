@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +14,11 @@ namespace ClamAV.Net.Commands.Base
 
         protected BaseCommand(string name)
         {
-            Name = name;
+            Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
             mClamdCommandName =
-                Encoding.UTF8.GetBytes($"{Consts.COMMAND_PREFIX_CHARACTER}{Name}{(char)Consts.TERMINATION_BYTE}");
+                Encoding.UTF8.GetBytes($"{Consts.COMMAND_PREFIX_CHARACTER}{Name}{(char) Consts.TERMINATION_BYTE}");
         }
-        
+
         public virtual async Task WriteCommandAsync(Stream stream, CancellationToken cancellationToken = default)
         {
             await stream.WriteAsync(mClamdCommandName, 0, mClamdCommandName.Length, cancellationToken).ConfigureAwait(false);
@@ -28,7 +29,5 @@ namespace ClamAV.Net.Commands.Base
         {
             return Task.CompletedTask;
         }
-
-
     }
 }

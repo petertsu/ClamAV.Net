@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ClamAV.Net.Commands.Base;
+using ClamAV.Net.Exceptions;
 
 namespace ClamAV.Net.Commands
 {
@@ -16,12 +17,14 @@ namespace ClamAV.Net.Commands
 
         public Task<string> ProcessRawResponseAsync(byte[] rawResponse, CancellationToken cancellationToken = default)
         {
+            if (rawResponse == null)
+                return Task.FromException<string>(new ClamAVException($"Raw response is null"));
+
             string actualResponse = Encoding.UTF8.GetString(rawResponse);
 
-            if (string.Equals(EXPECTED_RESPONSE, actualResponse, StringComparison.Ordinal))
-                return Task.FromResult(actualResponse);
-
-            return Task.FromException<string>(new Exception($"Unexpected response {actualResponse}"));
+            return string.Equals(EXPECTED_RESPONSE, actualResponse, StringComparison.Ordinal)
+                ? Task.FromResult(actualResponse)
+                : Task.FromException<string>(new ClamAVException($"Unexpected response {actualResponse}"));
         }
     }
 }
