@@ -14,12 +14,15 @@ namespace ClamAV.Net.Commands
 
         public InStreamCommand(Stream dataStream) : base("INSTREAM")
         {
-            mDataStream = dataStream;
+            mDataStream = dataStream ?? throw new ArgumentNullException(nameof(dataStream));
+
+            if (!dataStream.CanRead)
+                throw new ArgumentException("Data stream should support read", nameof(dataStream));
         }
-        
+
         protected override async Task WriteCommandDataAsync(Stream stream, CancellationToken cancellationToken)
         {
-            byte[] dataChunk = new byte[3];
+            byte[] dataChunk = new byte[1024];
             int numBytesRead;
 
             while ((numBytesRead = await mDataStream.ReadAsync(dataChunk, 0, dataChunk.Length, cancellationToken).ConfigureAwait(false)) > 0)

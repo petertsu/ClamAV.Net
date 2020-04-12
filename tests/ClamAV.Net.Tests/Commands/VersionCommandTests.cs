@@ -16,24 +16,24 @@ namespace ClamAV.Net.Tests.Commands
         [Fact]
         public void Ctor_Set_Valid_Name()
         {
-            VersionCommand pingCommand = new VersionCommand();
-            pingCommand.Name.Should().Be("VERSION");
+            VersionCommand versionCommand = new VersionCommand();
+            versionCommand.Name.Should().Be("VERSION");
         }
 
         [Fact]
         public async Task WriteCommandAsync_Should_Write_CommandName()
         {
-            VersionCommand pingCommand = new VersionCommand();
+            VersionCommand versionCommand = new VersionCommand();
             await using MemoryStream memoryStream = new MemoryStream();
 
-            await pingCommand.WriteCommandAsync(memoryStream).ConfigureAwait(false);
+            await versionCommand.WriteCommandAsync(memoryStream).ConfigureAwait(false);
 
             byte[] commandData = memoryStream.ToArray();
 
             string actual = Encoding.UTF8.GetString(commandData);
 
             actual.Should()
-                .Be($"{Consts.COMMAND_PREFIX_CHARACTER}{pingCommand.Name}{(char)Consts.TERMINATION_BYTE}");
+                .Be($"{Consts.COMMAND_PREFIX_CHARACTER}{versionCommand.Name}{(char)Consts.TERMINATION_BYTE}");
         }
 
         [Theory]
@@ -45,17 +45,17 @@ namespace ClamAV.Net.Tests.Commands
 
         public async Task ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_exception(string rawData)
         {
-            VersionCommand pingCommand = new VersionCommand();
+            VersionCommand versionCommand = new VersionCommand();
 
             byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
 
-            await Assert.ThrowsAsync<ClamAVException>(async () => await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
+            await Assert.ThrowsAsync<ClamAVException>(async () => await versionCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
         }
 
         [Fact]
         public async Task ProcessRawResponseAsync_Valid_Raw_Data_Should_Return_PONG()
         {
-            VersionCommand pingCommand = new VersionCommand();
+            VersionCommand versionCommand = new VersionCommand();
 
             string expectedProgramVersion = "ClamAv 1.17.219";
             string expectedVirusDbVersion = (DateTime.Now.Ticks % 11177).ToString();
@@ -63,7 +63,7 @@ namespace ClamAV.Net.Tests.Commands
 
             byte[] rawBytes = Encoding.UTF8.GetBytes($"{expectedProgramVersion}/{expectedVirusDbVersion}/{DateTime.Now}");
 
-            VersionResult actual = await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false);
+            VersionResult actual = await versionCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false);
 
             actual.ProgramVersion.Should().Be(expectedProgramVersion);
             actual.VirusDbVersion.Should().Be(expectedVirusDbVersion);
