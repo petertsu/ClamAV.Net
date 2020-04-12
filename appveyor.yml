@@ -1,9 +1,22 @@
 version: 0.1.{build}
-image: Visual Studio 2019
+image: Ubuntu1804
 configuration: Release
+platform: Any CPU
+clone_depth: 1
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  version_prefix: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
 build_script:
 - ps: dotnet build -c Release
 test_script:
 - ps: dotnet test -c Release /p:CollectCoverage=true
 artifacts:
 - path:  '**\*.nupkg'
+  type: NuGetPackage 
+  name: Nuget
