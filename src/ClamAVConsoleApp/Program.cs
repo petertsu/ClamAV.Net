@@ -7,48 +7,28 @@ using ClamAV.Net.Client;
 
 namespace ClamAVConsoleApp
 {
-    class Program
+    internal static class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
-          
             IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:3310"));
 
-           
+            await clamAvClient.PingAsync();
 
-            for (int i = 0; i < 5; i++)
+            VersionResult result = await clamAvClient.GetVersionAsync();
+
+            Console.WriteLine(
+                $"ClamAV version - {result.ProgramVersion} , virus database version {result.VirusDbVersion}");
+
+            using (HttpClient httpClient = new HttpClient())
             {
-               
-                await clamAvClient.PingAsync();
+                await using Stream stream =
+                    await httpClient.GetStreamAsync("http://www.eicar.org/download/eicar.com.txt");
 
-           
-              //  await clamAvClient.PingAsync();
+                ScanResult res = await clamAvClient.ScanDataAsync(stream);
 
-                VersionResult result = await clamAvClient.GetVersionAsync();
-                Console.WriteLine($"#{i}: {result.ProgramVersion} , {result.VirusDbVersion}");
-
-                using (HttpClient httpClient = new HttpClient())
-                using (Stream stream = await httpClient.GetStreamAsync("http://www.eicar.org/download/eicar.com.txt?xxxx"))
-                {
-                    
-
-                   ScanResult res = await clamAvClient.ScanDataAsync(stream);
-                   Console.WriteLine($"#{i}: {res.Infected} , {res.VirusName}");
-                }
-
-
-
-
-
-
-                //  await clamAvClient.ScanDataAsync(new MemoryStream(new byte[5]));
-
-
-                
+                Console.WriteLine($"Scan result : Infected - {res.Infected} , Virus name {res.VirusName}");
             }
-
-            Console.ReadKey();
-
         }
     }
 }
