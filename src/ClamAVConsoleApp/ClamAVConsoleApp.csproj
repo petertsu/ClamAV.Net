@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\ClamAV.Net\ClamAV.Net.csproj" />
+    <ProjectReference Include="..\ClamAV.Net\ClamAV.Net.csproj" />
   </ItemGroup>
 
+ 
 </Project>
