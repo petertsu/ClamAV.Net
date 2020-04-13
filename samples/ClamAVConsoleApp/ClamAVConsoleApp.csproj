@@ -6,8 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClamAV.Net\ClamAV.Net.csproj" />
+    <PackageReference Include="ClamAV.Net" Version="0.1.125" />
   </ItemGroup>
+
+  
 
  
 </Project>
