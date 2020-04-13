@@ -15,9 +15,8 @@ namespace ClamAV.Net.Tests.Client
         [Fact]
         public void Ctor_Parameter_Validation()
         {
-            Assert.Throws<ArgumentNullException>("connectionUri", () => new ClamAvClient(null, null));
             Assert.Throws<ArgumentNullException>("connectionFactory",
-                () => new ClamAvClient(new Uri("tcp:/localhost"), null));
+               () => new ClamAvClient(null));
         }
 
         [Fact]
@@ -27,7 +26,7 @@ namespace ClamAV.Net.Tests.Client
                 cancellationToken) mocks = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(new Uri("tcp://localhost"), mocks.connectionFactoryMock.Object);
+                new ClamAvClient(mocks.connectionFactoryMock.Object);
 
             await clamAvClient.GetVersionAsync(mocks.cancellationToken);
 
@@ -46,7 +45,7 @@ namespace ClamAV.Net.Tests.Client
                 cancellationToken) mocks = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(new Uri("tcp://localhost"), mocks.connectionFactoryMock.Object);
+                new ClamAvClient(mocks.connectionFactoryMock.Object);
 
             await clamAvClient.PingAsync(mocks.cancellationToken);
 
@@ -65,7 +64,7 @@ namespace ClamAV.Net.Tests.Client
                 cancellationToken) mocks = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(new Uri("tcp://localhost"), mocks.connectionFactoryMock.Object);
+                new ClamAvClient(mocks.connectionFactoryMock.Object);
 
             await clamAvClient.ScanDataAsync(Stream.Null, mocks.cancellationToken);
 
@@ -86,7 +85,7 @@ namespace ClamAV.Net.Tests.Client
                     );
 
             data.connectionFactoryMock.Setup(connectionFactory =>
-                    connectionFactory.CreateAsync(It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
+                    connectionFactory.CreateAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(data.connectionMock.Object));
 
             return data;

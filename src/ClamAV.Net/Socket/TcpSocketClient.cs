@@ -25,10 +25,8 @@ namespace ClamAV.Net.Socket
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
         {
-           await mClient.ConnectAsync(mConnectionString.Host, mConnectionString.Port);
-            
+            await mClient.ConnectAsync(mConnectionString.Host, mConnectionString.Port);
         }
-   
 
         private async Task<byte[]> ReadResponse(CancellationToken cancellationToken)
         {
@@ -45,24 +43,17 @@ namespace ClamAV.Net.Socket
                     while ((numBytesRead = await stream.ReadAsync(answerBytes, 0, answerBytes.Length, cancellationToken)
                         .ConfigureAwait(false)) > 0)
                     {
-
                         if (numBytesRead < answerBytes.Length &&
                             answerBytes[numBytesRead - 1] == Consts.TERMINATION_BYTE)
                         {
                             await memoryStream.WriteAsync(answerBytes, 0, numBytesRead - 1, cancellationToken)
                                 .ConfigureAwait(false);
                             break;
-
                         }
                         await memoryStream.WriteAsync(answerBytes, 0, numBytesRead, cancellationToken)
                             .ConfigureAwait(false);
-
                     }
-
-                      
                 } while (mClient.Available > 0);
-
-
 
                 Console.WriteLine($" {Encoding.UTF8.GetString(memoryStream.ToArray())}");
 
@@ -80,8 +71,6 @@ namespace ClamAV.Net.Socket
             NetworkStream stream = mClient.GetStream();
             await command.WriteCommandAsync(stream, cancellationToken).ConfigureAwait(false);
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
-
-            
         }
 
         public async Task<TResponse> SendCommandAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
