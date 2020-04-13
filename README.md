@@ -1,9 +1,12 @@
 # ClamAV.Net
+![ClamAV Logo](http://www.clamav.net/assets/clamav-trademark.png)
+
 ClamAV .NETStandard 2.0 client
 
 [![Build status](https://ci.appveyor.com/api/projects/status/uep7igf5d3p9kbg2?svg=true)](https://ci.appveyor.com/project/petertsu/clamav-net)
+[![NuGet version](https://badge.fury.io/nu/ClamAV.Net.svg)](https://badge.fury.io/nu/ClamAV.Net)
 
-Usage example
+## Usage example
 ```csharp
 private static async Task Main()
 {
@@ -31,8 +34,15 @@ private static async Task Main()
 	}
 }
 ```
-Output
-```
+## Output
+
+```bash
 ClamAV version - ClamAV 0.102.1 , virus database version 25779
 Scan result : Infected - True , Virus name Win.Test.EICAR_HDB-1
+```
+
+## Run ClamAV docker
+
+```bash
+    docker run -d -p 3310:3310 mkodockx/docker-clamav:alpine
 ```
