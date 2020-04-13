@@ -6,6 +6,16 @@ ClamAV .NETStandard 2.0 client
 [![Build status](https://ci.appveyor.com/api/projects/status/uep7igf5d3p9kbg2?svg=true)](https://ci.appveyor.com/project/petertsu/clamav-net)
 [![NuGet version](https://badge.fury.io/nu/ClamAV.Net.svg)](https://badge.fury.io/nu/ClamAV.Net)
 
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=bugs)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=code_smells)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=coverage)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=alert_status)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=security_rating)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
+
+
 ## Usage example
 ```csharp
 private static async Task Main()
