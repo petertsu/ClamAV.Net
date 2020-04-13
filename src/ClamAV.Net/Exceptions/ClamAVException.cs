@@ -15,7 +15,7 @@ namespace ClamAV.Net.Exceptions
         {
         }
 
-        internal ClamAvException()
+        internal ClamAvException() : base("ClamAV client error occured")
         {
         }
 
