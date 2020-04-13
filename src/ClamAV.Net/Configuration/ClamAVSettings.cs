@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ClamAV.Net.Configuration
+﻿namespace ClamAV.Net.Configuration
 {
-    class ClamAvSettings
+    internal class ClamAvSettings
     {
         public ClamAvSettings(string host, int port)
         {
@@ -12,8 +8,7 @@ namespace ClamAV.Net.Configuration
             Port = port;
         }
 
-        public string Host { get;  }
+        public string Host { get; }
         public int Port { get; }
-
     }
 }

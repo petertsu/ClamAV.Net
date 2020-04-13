@@ -12,11 +12,17 @@ namespace ClamAV.Net.Tests.Connection
 {
     public class ConnectionFactoryTests
     {
-        [Fact]
-        public void Ctor_Parameter_Validation()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("xx://server")]
+        [InlineData("tcp:/server")]
+
+        public void Ctor_Parameter_Validation(string invalidUri)
         {
-            Assert.Throws<ArgumentNullException>("connectionUri", () => new ConnectionFactory(null));
-            Assert.Throws<ArgumentException>("connectionUri", () => new ConnectionFactory(new Uri("http://loclahost")));
+            if(invalidUri == null)
+                Assert.Throws<ArgumentNullException>("connectionUri", () => new ConnectionFactory(null));
+            else
+                Assert.Throws<ArgumentException>("connectionUri", () => new ConnectionFactory(new Uri(invalidUri)));
         }
 
         [Fact]

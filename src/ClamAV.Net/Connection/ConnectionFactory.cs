@@ -25,6 +25,14 @@ namespace ClamAV.Net.Connection
 
             if (connectionUri.Scheme != "tcp")
                 throw new ArgumentException($"Unsupported protocol {connectionUri.Scheme}", nameof(connectionUri));
+
+            if (string.IsNullOrWhiteSpace(connectionUri.Host))
+                throw new ArgumentException($"Invalid host {connectionUri.Host}", nameof(connectionUri));
+
+            if (connectionUri.Port < 0)
+                throw new ArgumentException($"Invalid port {connectionUri.Port}", nameof(connectionUri));
+
+
         }
 
         public async Task<IConnection> CreateAsync(CancellationToken cancellationToken = default)

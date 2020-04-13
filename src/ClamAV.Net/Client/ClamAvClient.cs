@@ -21,7 +21,9 @@ namespace ClamAV.Net.Client
         /// Create ClamAV client
         /// </summary>
         /// <param name="connectionUri"></param>
-        /// <returns></returns>
+        /// <returns>IClamAvClient ClamAV client</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public static IClamAvClient Create(Uri connectionUri)
         {
             return new ClamAvClient(new ConnectionFactory(connectionUri));
