@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ClamAV.Net.Client;
 using ClamAV.Net.Commands;
 using ClamAV.Net.Connection;
+using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -55,6 +56,13 @@ namespace ClamAV.Net.Tests.Client
 
             mocks.connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
+        }
+
+        [Fact]
+        public void Create_Should_Create_Client()
+        {
+            IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:33753"));
+            clamAvClient.Should().NotBeNull();
         }
 
         [Fact]

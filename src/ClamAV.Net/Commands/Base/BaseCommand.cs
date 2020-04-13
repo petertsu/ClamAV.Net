@@ -16,7 +16,7 @@ namespace ClamAV.Net.Commands.Base
         {
             Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
             mClamdCommandName =
-                Encoding.UTF8.GetBytes($"{Consts.COMMAND_PREFIX_CHARACTER}{Name}{(char) Consts.TERMINATION_BYTE}");
+                Encoding.UTF8.GetBytes($"{Consts.COMMAND_PREFIX_CHARACTER}{Name}{(char)Consts.TERMINATION_BYTE}");
         }
 
         public virtual async Task WriteCommandAsync(Stream stream, CancellationToken cancellationToken = default)

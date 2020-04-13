@@ -10,9 +10,6 @@ namespace ClamAV.Net.Socket
 
         Task ConnectAsync(CancellationToken cancellationToken = default);
 
-
-        
-
         //Task<byte[]> SendCommandAsync(byte[] command, bool waitForResponse, Func<Stream, Task> commandData,
         //    CancellationToken cancellationToken);
     }

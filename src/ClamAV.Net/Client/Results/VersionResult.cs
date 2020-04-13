@@ -1,7 +1,7 @@
 ﻿namespace ClamAV.Net.Client.Results
 {
     /// <summary>
-    /// Result of VERSION command execution 
+    /// Result of VERSION command execution
     /// </summary>
     public class VersionResult
     {
