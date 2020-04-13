@@ -51,6 +51,24 @@ ClamAV version - ClamAV 0.102.1 , virus database version 25779
 Scan result : Infected - True , Virus name Win.Test.EICAR_HDB-1
 ```
 
+## Use .NET Core Logger
+```csharp
+ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
+                builder.AddConsole(opt => opt.Format = ConsoleLoggerFormat.Systemd)
+                    .SetMinimumLevel(LogLevel.Information));
+
+//Create a client
+IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:3310"), loggerFactory);
+```
+## Output
+
+```bash
+<6>ClamAV.Net.Samples.Console.Program[0] ClamAV version - ClamAV 0.102.1 , virus database version 25781
+<6>ClamAV.Net.Samples.Console.Program[0] Scan result : Infected - True , Virus name Win.Test.EICAR_HDB-1
+```
+
+
+
 ## Run ClamAV docker
 
 ```bash
