@@ -4,15 +4,22 @@ using System.Threading.Tasks;
 using ClamAV.Net.Configuration;
 using ClamAV.Net.Exceptions;
 using ClamAV.Net.Socket;
+using Microsoft.Extensions.Logging;
 
 namespace ClamAV.Net.Connection
 {
     internal class ConnectionFactory : IConnectionFactory
     {
+        private readonly ILoggerFactory mLoggerFactory;
         private readonly ClamAvSettings mClamAvSettings;
+        private readonly ILogger<ConnectionFactory> mLogger;
 
-        public ConnectionFactory(Uri connectionUri)
+        public ConnectionFactory(Uri connectionUri, ILoggerFactory loggerFactory)
         {
+            mLoggerFactory = loggerFactory;
+
+            mLogger = loggerFactory.CreateLogger<ConnectionFactory>();
+
             ValidateUri(connectionUri);
 
             mClamAvSettings = new ClamAvSettings(connectionUri.Host, connectionUri.Port);
@@ -37,8 +44,13 @@ namespace ClamAV.Net.Connection
         {
             try
             {
-                TcpSocketClient tcpSocketClient = new TcpSocketClient(mClamAvSettings);
+                
+
+                TcpSocketClient tcpSocketClient =
+                    new TcpSocketClient(mClamAvSettings, mLoggerFactory.CreateLogger<TcpSocketClient>());
+
                 await tcpSocketClient.ConnectAsync(cancellationToken).ConfigureAwait(false);
+                
                 return tcpSocketClient;
             }
             catch (Exception e)

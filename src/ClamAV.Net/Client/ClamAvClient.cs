@@ -7,6 +7,8 @@ using ClamAV.Net.Commands;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Connection;
 using ClamAV.Net.Exceptions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ClamAV.Net.Client
 {
@@ -16,22 +18,28 @@ namespace ClamAV.Net.Client
     public class ClamAvClient : IClamAvClient
     {
         private readonly IConnectionFactory mConnectionFactory;
+        private readonly ILogger<ClamAvClient> mLogger;
 
         /// <summary>
         /// Create ClamAV client
         /// </summary>
-        /// <param name="connectionUri"></param>
+        /// <param name="connectionUri">Connection Uri</param>
+        /// <param name="loggerFactory">Optional logger factory</param>
         /// <returns>IClamAvClient ClamAV client</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public static IClamAvClient Create(Uri connectionUri)
+        public static IClamAvClient Create(Uri connectionUri, ILoggerFactory loggerFactory = null)
         {
-            return new ClamAvClient(new ConnectionFactory(connectionUri));
+            ILoggerFactory tmpLoggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+            
+            return new ClamAvClient(new ConnectionFactory(connectionUri, tmpLoggerFactory),
+                tmpLoggerFactory.CreateLogger<ClamAvClient>());
         }
 
-        internal ClamAvClient(IConnectionFactory connectionFactory)
+        internal ClamAvClient(IConnectionFactory connectionFactory, ILogger<ClamAvClient> logger)
         {
             mConnectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+            mLogger = logger ?? throw new ArgumentNullException(nameof(logger)); 
         }
 
         //private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
@@ -54,12 +62,14 @@ namespace ClamAV.Net.Client
                     return await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
                 }
             }
-            catch (ClamAvException)
+            catch (ClamAvException e)
             {
+                mLogger.LogError(e,"ClamAV error occured");
                 throw;
             }
             catch (Exception e)
             {
+                mLogger.LogError(e, "General error occured");
                 throw new ClamAvException("ClamAV client error occured", e);
             }
         }
@@ -72,6 +82,8 @@ namespace ClamAV.Net.Client
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
         public async Task<VersionResult> GetVersionAsync(CancellationToken cancellationToken = default)
         {
+            mLogger.LogTrace($"Send {nameof(VersionCommand)} to the server");
+
             return await SendCommand(new VersionCommand(), cancellationToken).ConfigureAwait(false);
         }
 
@@ -83,6 +95,8 @@ namespace ClamAV.Net.Client
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
         public async Task PingAsync(CancellationToken cancellationToken = default)
         {
+            mLogger.LogTrace($"Send {nameof(PingCommand)} to the server");
+
             await SendCommand(new PingCommand(), cancellationToken).ConfigureAwait(false);
         }
 
@@ -96,6 +110,8 @@ namespace ClamAV.Net.Client
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
         public async Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default)
         {
+            mLogger.LogTrace($"Send {nameof(InStreamCommand)} to the server");
+
             return await SendCommand(new InStreamCommand(dataStream), cancellationToken).ConfigureAwait(false);
         }
     }

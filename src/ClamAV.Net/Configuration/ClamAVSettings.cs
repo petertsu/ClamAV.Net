@@ -12,5 +12,10 @@
         public string Host { get; }
         public int Port { get; }
         public int ReadBufferSize { get; }
+
+        public override string ToString()
+        {
+            return $"Server={Host}:{Port} {nameof(ReadBufferSize)}={ReadBufferSize}";
+        }
     }
 }
