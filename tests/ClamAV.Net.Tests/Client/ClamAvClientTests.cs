@@ -20,6 +20,9 @@ namespace ClamAV.Net.Tests.Client
         {
             Assert.Throws<ArgumentNullException>("connectionFactory",
                 () => new ClamAvClient(null, new NullLogger<ClamAvClient>()));
+
+            Assert.Throws<ArgumentNullException>("logger",
+                () => new ClamAvClient(new Mock<IConnectionFactory>().Object, null));
         }
 
         [Fact]

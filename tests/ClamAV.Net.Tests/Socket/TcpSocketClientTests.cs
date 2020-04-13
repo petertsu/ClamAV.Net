@@ -17,6 +17,9 @@ namespace ClamAV.Net.Tests.Socket
         {
             Assert.Throws<ArgumentNullException>("clamAvSettings",
                 () => new TcpSocketClient(null, NullLogger<TcpSocketClient>.Instance));
+
+            Assert.Throws<ArgumentNullException>("logger",
+                () => new TcpSocketClient(new ClamAvSettings("127.0.0.1",111), null));
         }
 
         [Fact]
