@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ClamAV.Net.Client;
 using ClamAV.Net.Commands;
 using ClamAV.Net.Connection;
+using ClamAV.Net.Exceptions;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -57,6 +58,54 @@ namespace ClamAV.Net.Tests.Client
         }
 
         [Fact]
+        public async Task PingAsync_Should_Throw_ClamAvException_With_Inner()
+        {
+            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock,
+                CancellationToken cancellationToken) = CreateMocks();
+
+            Exception thrownException = new Exception("Some error");
+
+            ClamAvClient clamAvClient =
+                new ClamAvClient(connectionFactoryMock.Object);
+
+            connectionMock.Setup(
+                mock => mock.SendCommandAsync(It.IsAny<PingCommand>(),
+                    It.Is<CancellationToken>(ct => ct == cancellationToken))).Throws(thrownException);
+
+            ClamAvException actualException = await Assert.ThrowsAsync<ClamAvException>(async () =>
+                await clamAvClient.PingAsync(cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
+
+            actualException.InnerException.Should().BeEquivalentTo(thrownException);
+
+            connectionMock.Verify(
+                mock => mock.Dispose(), Times.Once());
+        }
+
+        [Fact]
+        public async Task PingAsync_Should_Throw_ClamAvException()
+        {
+            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock,
+                CancellationToken cancellationToken) = CreateMocks();
+
+            ClamAvException thrownException = new ClamAvException("Some error");
+
+            ClamAvClient clamAvClient =
+                new ClamAvClient(connectionFactoryMock.Object);
+
+            connectionMock.Setup(
+                mock => mock.SendCommandAsync(It.IsAny<PingCommand>(),
+                    It.Is<CancellationToken>(ct => ct == cancellationToken))).Throws(thrownException);
+
+            ClamAvException actualException = await Assert.ThrowsAsync<ClamAvException>(async () =>
+                await clamAvClient.PingAsync(cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
+
+            actualException.Should().BeEquivalentTo(thrownException);
+
+            connectionMock.Verify(
+                mock => mock.Dispose(), Times.Once());
+        }
+
+        [Fact]
         public void Create_Should_Create_Client()
         {
             IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:33753"));
@@ -81,7 +130,7 @@ namespace ClamAV.Net.Tests.Client
                 mock => mock.Dispose(), Times.Once());
         }
 
-        private (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) CreateMocks()
+        private static (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) CreateMocks()
         {
             (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) data = (
                     new Mock<IConnectionFactory>(),

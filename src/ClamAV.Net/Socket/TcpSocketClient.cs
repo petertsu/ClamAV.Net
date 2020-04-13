@@ -16,13 +16,11 @@ namespace ClamAV.Net.Socket
         private readonly TcpClient mClient;
         private bool mDisposed;
 
-        public TcpSocketClient(Uri connectionString)
+        public TcpSocketClient(Uri connectionUri)
         {
-            mConnectionString = connectionString;
+            mConnectionString = connectionUri ?? throw new ArgumentNullException(nameof(connectionUri));
             mClient = new TcpClient();
         }
-
-        public bool Connected => mClient.Connected;
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
         {
@@ -52,12 +50,11 @@ namespace ClamAV.Net.Socket
                                 .ConfigureAwait(false);
                             break;
                         }
+
                         await memoryStream.WriteAsync(answerBytes, 0, numBytesRead, cancellationToken)
                             .ConfigureAwait(false);
                     }
                 } while (mClient.Available > 0);
-
-                Console.WriteLine($"{Encoding.UTF8.GetString(memoryStream.ToArray())}");
 
                 return memoryStream.ToArray();
             }

@@ -9,15 +9,14 @@
 		<VersionSuffix>alpha</VersionSuffix>
 		<InformationalVersion>This is a prerelease package</InformationalVersion>
 		<RepositoryUrl>https://github.com/petertsu/ClamAV.Net</RepositoryUrl>
-	    <Title>The ClamAV server client</Title>
-	</PropertyGroup>
-	<PropertyGroup>
-		<PackageId>ClamAV.Net</PackageId>
+	    <Title>The ClamAV server .NETStandard client</Title>
+	    <PackageId>ClamAV.Net</PackageId>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageProjectUrl>https://github.com/petertsu/ClamAV.Net</PackageProjectUrl>
-		<License>MIT</License>
-		<Description>The ClamAV server client</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>The ClamAV server .NETStandard client</Description>
 		<PackageTags>clamav virus clam clamd</PackageTags>
-		<Authors>petertsu</Authors>
+		<Copyright>Copyright 2019 petertsu</Copyright>
+		<Summary>The ClamAV server .NETStandard client</Summary>
 	</PropertyGroup>
 </Project>
