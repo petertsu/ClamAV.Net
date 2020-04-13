@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ClamAV.Net.ClamdProtocol;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Exceptions;
 
@@ -11,7 +12,7 @@ namespace ClamAV.Net.Commands
     {
         private const string EXPECTED_RESPONSE = "PONG";
 
-        public PingCommand() : base("PING")
+        public PingCommand() : base(Consts.PING_COMMAND)
         {
         }
 

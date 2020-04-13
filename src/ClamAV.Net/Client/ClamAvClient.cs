@@ -19,20 +19,20 @@ namespace ClamAV.Net.Client
             return new ClamAvClient(connectionUri, new ConnectionFactory());
         }
 
-        private ClamAvClient(Uri connectionUri, IConnectionFactory connectionFactory)
+        internal ClamAvClient(Uri connectionUri, IConnectionFactory connectionFactory)
         {
-            mConnectionUri = connectionUri;
-            mConnectionFactory = connectionFactory;
+            mConnectionUri = connectionUri ?? throw  new ArgumentNullException(nameof(connectionUri));
+            mConnectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
         }
 
-        private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
-        {
-            using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
-                .ConfigureAwait(false))
-            {
-                await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
-            }
-        }
+        //private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
+        //{
+        //    using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
+        //        .ConfigureAwait(false))
+        //    {
+        //        await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
+        //    }
+        //}
 
         private async Task<TResponse> SendCommand<TResponse>(ICommand<TResponse> command,
             CancellationToken cancellationToken)

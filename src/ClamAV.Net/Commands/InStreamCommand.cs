@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ClamAV.Net.ClamdProtocol;
 using ClamAV.Net.Client;
 using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands.Base;
@@ -15,7 +16,7 @@ namespace ClamAV.Net.Commands
     {
         private readonly Stream mDataStream;
 
-        public InStreamCommand(Stream dataStream) : base("INSTREAM")
+        public InStreamCommand(Stream dataStream) : base(Consts.INSTREAM_COMMAND)
         {
             mDataStream = dataStream ?? throw new ArgumentNullException(nameof(dataStream));
 
