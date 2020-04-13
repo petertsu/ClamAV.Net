@@ -64,10 +64,15 @@ ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
 //Create a client
 IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:3310"), loggerFactory);
 ```
-## Output
+## Output systemd style
 
 ```bash
-<6>ClamAV.Net.Samples.Console.Program[0] ClamAV version - ClamAV 0.102.1 , virus database version 25781
+<7>ClamAV.Net.Socket.TcpSocketClient[0] Connecting to Server=127.0.0.1:3310 , parameters (ReadBufferSize=1024)
+<7>ClamAV.Net.Socket.TcpSocketClient[0] Start writing command 'INSTREAM' to the network stream
+<7>ClamAV.Net.Socket.TcpSocketClient[0] End writing command 'INSTREAM' to the network stream
+<7>ClamAV.Net.Socket.TcpSocketClient[0] Start reading command 'INSTREAM' response
+<7>ClamAV.Net.Socket.TcpSocketClient[0] End reading command 'INSTREAM' response. Total 34 bytes
+<7>ClamAV.Net.Socket.TcpSocketClient[0] Socket disposed
 <6>ClamAV.Net.Samples.Console.Program[0] Scan result : Infected - True , Virus name Win.Test.EICAR_HDB-1
 ```
 
