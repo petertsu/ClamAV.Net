@@ -6,6 +6,7 @@ using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Connection;
+using ClamAV.Net.Exceptions;
 
 namespace ClamAV.Net.Client
 {
@@ -35,10 +36,21 @@ namespace ClamAV.Net.Client
         private async Task<TResponse> SendCommand<TResponse>(ICommand<TResponse> command,
             CancellationToken cancellationToken)
         {
-            using (IConnection connection = await mConnectionFactory.CreateAsync(cancellationToken)
-                .ConfigureAwait(false))
+            try
             {
-                return await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
+                using (IConnection connection = await mConnectionFactory.CreateAsync(cancellationToken)
+                    .ConfigureAwait(false))
+                {
+                    return await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
+                }
+            }
+            catch (ClamAvException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new ClamAvException("ClamAV client error occured", e);
             }
         }
 
