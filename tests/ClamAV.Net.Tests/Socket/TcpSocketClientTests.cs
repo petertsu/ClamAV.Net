@@ -17,6 +17,18 @@ namespace ClamAV.Net.Tests.Socket
         }
 
         [Fact]
+        public void Dispose_tests()
+        {
+            TcpSocketClient client = new TcpSocketClient(new Uri("tcp://127.0.0.1:9090"));
+
+            Action testAction = () => client.Dispose();
+
+            testAction.Should().NotThrow();
+            testAction.Should().NotThrow();
+            testAction.Should().NotThrow();
+        }
+
+        [Fact]
         public async Task SendCommandAsync_Should_Send_Data_And_Read_Response()
         {
             int port = new Random().Next(55000, 56000);
