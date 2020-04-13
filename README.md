@@ -3,7 +3,7 @@ ClamAV .NETStandard 2.0 client
 
 [![Build status](https://ci.appveyor.com/api/projects/status/uep7igf5d3p9kbg2?svg=true)](https://ci.appveyor.com/project/petertsu/clamav-net)
 
-
+Usage example
 ```csharp
 private static async Task Main()
 {
@@ -30,4 +30,9 @@ private static async Task Main()
 		Console.WriteLine($"Scan result : Infected - {res.Infected} , Virus name {res.VirusName}");
 	}
 }
+```
+Output
+```
+ClamAV version - ClamAV 0.102.1 , virus database version 25779
+Scan result : Infected - True , Virus name Win.Test.EICAR_HDB-1
 ```
