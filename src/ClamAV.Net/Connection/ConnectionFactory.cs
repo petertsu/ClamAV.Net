@@ -44,17 +44,17 @@ namespace ClamAV.Net.Connection
         {
             try
             {
-                
-
                 TcpSocketClient tcpSocketClient =
                     new TcpSocketClient(mClamAvSettings, mLoggerFactory.CreateLogger<TcpSocketClient>());
 
                 await tcpSocketClient.ConnectAsync(cancellationToken).ConfigureAwait(false);
-                
+
                 return tcpSocketClient;
             }
             catch (Exception e)
             {
+                mLogger.LogError(e, "ClamAV server connection failed");
+
                 throw new ClamAvException("Failed to create connection. See inner for details", e);
             }
         }

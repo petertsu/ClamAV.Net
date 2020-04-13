@@ -22,7 +22,7 @@ namespace ClamAV.Net.Tests.Socket
         [Fact]
         public void Dispose_tests()
         {
-            TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.0",33100), NullLogger<TcpSocketClient>.Instance);
+            TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.0", 33100), NullLogger<TcpSocketClient>.Instance);
 
             Action testAction = () => client.Dispose();
 
@@ -34,11 +34,10 @@ namespace ClamAV.Net.Tests.Socket
         [Theory]
         [InlineData(1000)]
         [InlineData(2)]
-
         public async Task SendCommandAsync_Should_Send_Data_And_Read_Response(int readBufferSize)
         {
             int port = new Random().Next(55000, 56000);
-         
+
             ClamAvServerMock clamAvServerMock = new ClamAvServerMock(port);
 
             try

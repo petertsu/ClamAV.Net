@@ -18,11 +18,10 @@ namespace ClamAV.Net.Tests.Connection
         [InlineData("xx://server")]
         [InlineData("tcp:/server")]
         [InlineData("tcp://server")]
-      
         public void Ctor_Parameter_Validation(string invalidUri)
         {
-            if(invalidUri == null)
-                Assert.Throws<ArgumentNullException>("connectionUri", () => new ConnectionFactory(null,NullLoggerFactory.Instance));
+            if (invalidUri == null)
+                Assert.Throws<ArgumentNullException>("connectionUri", () => new ConnectionFactory(null, NullLoggerFactory.Instance));
             else
                 Assert.Throws<ArgumentException>("connectionUri", () => new ConnectionFactory(new Uri(invalidUri), NullLoggerFactory.Instance));
         }

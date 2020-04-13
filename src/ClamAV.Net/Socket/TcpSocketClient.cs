@@ -28,7 +28,7 @@ namespace ClamAV.Net.Socket
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             mLogger.LogTrace($"Connecting to {mClamAvSettings}");
 
             await mClient.ConnectAsync(mClamAvSettings.Host, mClamAvSettings.Port).ConfigureAwait(false);
@@ -75,7 +75,7 @@ namespace ClamAV.Net.Socket
             mLogger.LogTrace("Start writing command to the network stream");
 
             await command.WriteCommandAsync(stream, cancellationToken).ConfigureAwait(false);
-            
+
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
 
             mLogger.LogTrace("End writing command to the network stream");

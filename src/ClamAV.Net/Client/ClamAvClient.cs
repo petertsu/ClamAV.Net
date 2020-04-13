@@ -31,7 +31,7 @@ namespace ClamAV.Net.Client
         public static IClamAvClient Create(Uri connectionUri, ILoggerFactory loggerFactory = null)
         {
             ILoggerFactory tmpLoggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
-            
+
             return new ClamAvClient(new ConnectionFactory(connectionUri, tmpLoggerFactory),
                 tmpLoggerFactory.CreateLogger<ClamAvClient>());
         }
@@ -39,7 +39,7 @@ namespace ClamAV.Net.Client
         internal ClamAvClient(IConnectionFactory connectionFactory, ILogger<ClamAvClient> logger)
         {
             mConnectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
-            mLogger = logger ?? throw new ArgumentNullException(nameof(logger)); 
+            mLogger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         //private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
@@ -64,7 +64,7 @@ namespace ClamAV.Net.Client
             }
             catch (ClamAvException e)
             {
-                mLogger.LogError(e,"ClamAV error occured");
+                mLogger.LogError(e, "ClamAV error occured");
                 throw;
             }
             catch (Exception e)
