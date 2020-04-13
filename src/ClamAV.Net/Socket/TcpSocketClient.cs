@@ -1,31 +1,31 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ClamAV.Net.ClamdProtocol;
 using ClamAV.Net.Commands.Base;
+using ClamAV.Net.Configuration;
 using ClamAV.Net.Connection;
 
 namespace ClamAV.Net.Socket
 {
     internal class TcpSocketClient : IConnection
     {
-        private readonly Uri mConnectionString;
+        private readonly ClamAvSettings mClamAvSettings;
         private readonly TcpClient mClient;
         private bool mDisposed;
 
-        public TcpSocketClient(Uri connectionUri)
+        public TcpSocketClient(ClamAvSettings clamAvSettings)
         {
-            mConnectionString = connectionUri ?? throw new ArgumentNullException(nameof(connectionUri));
+            mClamAvSettings = clamAvSettings ?? throw new ArgumentNullException(nameof(clamAvSettings));
             mClient = new TcpClient();
         }
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await mClient.ConnectAsync(mConnectionString.Host, mConnectionString.Port).ConfigureAwait(false);
+            await mClient.ConnectAsync(mClamAvSettings.Host, mClamAvSettings.Port).ConfigureAwait(false);
         }
 
         private async Task<byte[]> ReadResponse(CancellationToken cancellationToken)

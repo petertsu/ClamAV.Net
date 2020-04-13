@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ClamAV.Net.Commands;
+using ClamAV.Net.Configuration;
 using ClamAV.Net.Socket;
 using ClamAV.Net.Tests.ClamAvServer;
 using FluentAssertions;
@@ -13,13 +14,13 @@ namespace ClamAV.Net.Tests.Socket
         [Fact]
         public void Ctor_Validation()
         {
-            Assert.Throws<ArgumentNullException>("connectionUri", () => new TcpSocketClient(null));
+            Assert.Throws<ArgumentNullException>("clamAvSettings", () => new TcpSocketClient(null));
         }
 
         [Fact]
         public void Dispose_tests()
         {
-            TcpSocketClient client = new TcpSocketClient(new Uri("tcp://127.0.0.1:9090"));
+            TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.0",33100));
 
             Action testAction = () => client.Dispose();
 
@@ -32,15 +33,14 @@ namespace ClamAV.Net.Tests.Socket
         public async Task SendCommandAsync_Should_Send_Data_And_Read_Response()
         {
             int port = new Random().Next(55000, 56000);
-            Uri uri = new Uri($"tcp://127.0.0.1:{port}");
-
+           
             ClamAvServerMock clamAvServerMock = new ClamAvServerMock(port);
 
             try
             {
                 clamAvServerMock.Start(() => "PONG");
 
-                using TcpSocketClient client = new TcpSocketClient(uri);
+                using TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.1", port));
                 await client.ConnectAsync().ConfigureAwait(false);
 
                 string result = await client.SendCommandAsync(new PingCommand()).ConfigureAwait(false);

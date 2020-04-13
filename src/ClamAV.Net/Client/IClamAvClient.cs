@@ -6,6 +6,9 @@ using ClamAV.Net.Exceptions;
 
 namespace ClamAV.Net.Client
 {
+    /// <summary>
+    /// ClamAV client
+    /// </summary>
     public interface IClamAvClient
     {
         /// <summary>
