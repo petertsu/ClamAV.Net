@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Exceptions;
 
-namespace ClamAV.Net
+namespace ClamAV.Net.Client
 {
     public interface IClamAvClient
     {

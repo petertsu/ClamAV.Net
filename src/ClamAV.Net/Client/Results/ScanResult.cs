@@ -1,4 +1,4 @@
-﻿namespace ClamAV.Net.Client
+﻿namespace ClamAV.Net.Client.Results
 {
     public class ScanResult
     {

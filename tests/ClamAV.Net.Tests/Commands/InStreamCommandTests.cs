@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands;
 using ClamAV.Net.Exceptions;
 using FluentAssertions;

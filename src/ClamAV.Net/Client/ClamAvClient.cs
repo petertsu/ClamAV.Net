@@ -2,12 +2,12 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Connection;
 
-namespace ClamAV.Net
+namespace ClamAV.Net.Client
 {
     public class ClamAvClient : IClamAvClient
     {

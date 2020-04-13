@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ClamAV.Net;
 using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 
 namespace ClamAVConsoleApp
 {

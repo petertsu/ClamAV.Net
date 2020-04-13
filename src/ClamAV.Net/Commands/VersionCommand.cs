@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Exceptions;
 
