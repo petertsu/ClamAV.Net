@@ -4,11 +4,6 @@ using System.Threading.Tasks;
 
 namespace ClamAV.Net.Commands.Base
 {
-    internal struct VoidResponse
-    {
-    }
-
-
     internal interface ICommand
 
     {
@@ -19,7 +14,5 @@ namespace ClamAV.Net.Commands.Base
 
     {
         Task<TResponse> ProcessRawResponseAsync(byte[] rawResponse, CancellationToken cancellationToken = default);
-
     }
-
 }

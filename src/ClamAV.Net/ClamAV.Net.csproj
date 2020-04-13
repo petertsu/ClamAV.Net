@@ -8,11 +8,14 @@
 		<FileVersion>0.1.0</FileVersion>
 		<VersionSuffix>alpha</VersionSuffix>
 		<InformationalVersion>This is a prerelease package</InformationalVersion>
+		<RepositoryUrl>https://github.com/petertsu/ClamAV.Net</RepositoryUrl>
+	    <Title>The ClamAV server client</Title>
 	</PropertyGroup>
 	<PropertyGroup>
 		<PackageId>ClamAV.Net</PackageId>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageProjectUrl>https://github.com/petertsu/ClamAV.Net</PackageProjectUrl>
+		<License>MIT</License>
 		<Description>The ClamAV server client</Description>
 		<PackageTags>clamav virus clam clamd</PackageTags>
 		<Authors>petertsu</Authors>

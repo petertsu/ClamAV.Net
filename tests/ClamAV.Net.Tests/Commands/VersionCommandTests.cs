@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using ClamAV.Net.ClamdProtocol;
-using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands;
 using ClamAV.Net.Exceptions;
 using FluentAssertions;
@@ -42,14 +42,13 @@ namespace ClamAV.Net.Tests.Commands
         [InlineData(" ")]
         [InlineData("ERROR")]
         [InlineData("ClamAV 1.17.99/")]
-
         public async Task ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_exception(string rawData)
         {
             VersionCommand versionCommand = new VersionCommand();
 
             byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
 
-            await Assert.ThrowsAsync<ClamAvException>(async () => await versionCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
+            await Assert.ThrowsAsync<ClamAvException>(async () => await versionCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact]
@@ -57,9 +56,8 @@ namespace ClamAV.Net.Tests.Commands
         {
             VersionCommand versionCommand = new VersionCommand();
 
-            string expectedProgramVersion = "ClamAv 1.17.219";
+            const string expectedProgramVersion = "ClamAv 1.17.219";
             string expectedVirusDbVersion = (DateTime.Now.Ticks % 11177).ToString();
-
 
             byte[] rawBytes = Encoding.UTF8.GetBytes($"{expectedProgramVersion}/{expectedVirusDbVersion}/{DateTime.Now}");
 
@@ -67,7 +65,6 @@ namespace ClamAV.Net.Tests.Commands
 
             actual.ProgramVersion.Should().Be(expectedProgramVersion);
             actual.VirusDbVersion.Should().Be(expectedVirusDbVersion);
-
         }
     }
 }

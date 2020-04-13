@@ -40,14 +40,15 @@ namespace ClamAV.Net.Tests.Commands
         [InlineData(" ")]
         [InlineData("DATA")]
         [InlineData("PONG\0")]
-
         public async Task ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_exception(string rawData)
         {
             PingCommand pingCommand = new PingCommand();
 
             byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
 
-            await Assert.ThrowsAsync<ClamAvException>(async () => await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
+            await Assert
+                .ThrowsAsync<ClamAvException>(async () =>
+                    await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact]
@@ -57,7 +58,7 @@ namespace ClamAV.Net.Tests.Commands
 
             byte[] rawBytes = Encoding.UTF8.GetBytes("PONG");
 
-            string actual =await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false);
+            string actual = await pingCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false);
 
             actual.Should().Be("PONG");
         }

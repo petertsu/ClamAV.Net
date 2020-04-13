@@ -3,7 +3,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ClamAV.Net.Client;
+using ClamAV.Net.ClamdProtocol;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Exceptions;
 
@@ -11,7 +12,7 @@ namespace ClamAV.Net.Commands
 {
     internal class VersionCommand : BaseCommand, ICommand<VersionResult>
     {
-        public VersionCommand() : base("VERSION")
+        public VersionCommand() : base(Consts.VERSION_COMMAND)
         {
         }
 
@@ -27,8 +28,10 @@ namespace ClamAV.Net.Commands
                 StringSplitOptions.RemoveEmptyEntries);
 
             if (versions.Length < 2)
+            {
                 return Task.FromException<VersionResult>(
                     new ClamAvException($"Unexpected raw response '{actualResponse}'"));
+            }
 
             VersionResult versionResult = new VersionResult(versions[0], versions[1]);
 

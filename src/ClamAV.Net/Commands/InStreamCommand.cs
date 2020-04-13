@@ -4,7 +4,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ClamAV.Net.Client;
+using ClamAV.Net.ClamdProtocol;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Exceptions;
 
@@ -14,7 +15,7 @@ namespace ClamAV.Net.Commands
     {
         private readonly Stream mDataStream;
 
-        public InStreamCommand(Stream dataStream) : base("INSTREAM")
+        public InStreamCommand(Stream dataStream) : base(Consts.INSTREAM_COMMAND)
         {
             mDataStream = dataStream ?? throw new ArgumentNullException(nameof(dataStream));
 
@@ -54,17 +55,20 @@ namespace ClamAV.Net.Commands
                 return Task.FromResult(new ScanResult(false));
 
             if (!actualResponse.EndsWith("FOUND", StringComparison.OrdinalIgnoreCase))
+            {
                 return Task.FromException<ScanResult>(
                     new ClamAvException($"Unexpected raw response '{actualResponse}'"));
-           
-            string[] responseParts = actualResponse.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            string[] responseParts = actualResponse.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
             if (responseParts.Length < 2)
+            {
                 return Task.FromException<ScanResult>(
                     new ClamAvException($"Invalid raw response '{actualResponse}'"));
+            }
 
             return Task.FromResult(new ScanResult(true, responseParts[1]));
-
         }
     }
 }

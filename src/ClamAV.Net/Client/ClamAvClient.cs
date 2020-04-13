@@ -2,42 +2,40 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Commands;
 using ClamAV.Net.Commands.Base;
 using ClamAV.Net.Connection;
 
-namespace ClamAV.Net
+namespace ClamAV.Net.Client
 {
     public class ClamAvClient : IClamAvClient
     {
-        private readonly Uri mConnectionUri;
         private readonly IConnectionFactory mConnectionFactory;
 
         public static IClamAvClient Create(Uri connectionUri)
         {
-            return new ClamAvClient(connectionUri, new ConnectionFactory());
+            return new ClamAvClient(new ConnectionFactory(connectionUri));
         }
 
-        private ClamAvClient(Uri connectionUri, IConnectionFactory connectionFactory)
+        internal ClamAvClient(IConnectionFactory connectionFactory)
         {
-            mConnectionUri = connectionUri;
-            mConnectionFactory = connectionFactory;
+            mConnectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
         }
 
-        private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
-        {
-            using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
-                .ConfigureAwait(false))
-            {
-                await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
-            }
-        }
+        //private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
+        //{
+        //    using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
+        //        .ConfigureAwait(false))
+        //    {
+        //        await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
+        //    }
+        //}
 
         private async Task<TResponse> SendCommand<TResponse>(ICommand<TResponse> command,
             CancellationToken cancellationToken)
         {
-            using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
+            using (IConnection connection = await mConnectionFactory.CreateAsync(cancellationToken)
                 .ConfigureAwait(false))
             {
                 return await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);

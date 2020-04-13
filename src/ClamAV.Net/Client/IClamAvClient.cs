@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ClamAV.Net.Client;
+using ClamAV.Net.Client.Results;
 using ClamAV.Net.Exceptions;
 
-namespace ClamAV.Net
+namespace ClamAV.Net.Client
 {
     public interface IClamAvClient
     {
@@ -29,8 +29,8 @@ namespace ClamAV.Net
         /// Scan a stream of data. The stream is sent to ClamAV in chunks.
         /// Run INSTREAM command on the ClamAV server
         /// </summary>
-        /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <param name="dataStream">Data stream to scan. The stream should support read operation</param>
+        /// /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <returns>ScanResult</returns>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
         Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default);
