@@ -66,7 +66,7 @@ IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:3310")
 ```
 ## Output systemd style
 
-```bash
+```
 <7>ClamAV.Net.Socket.TcpSocketClient[0] Connecting to Server=127.0.0.1:3310 , parameters (ReadBufferSize=1024)
 <7>ClamAV.Net.Socket.TcpSocketClient[0] Start writing command 'INSTREAM' to the network stream
 <7>ClamAV.Net.Socket.TcpSocketClient[0] End writing command 'INSTREAM' to the network stream
