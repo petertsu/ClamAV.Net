@@ -1,27 +1,38 @@
 # ClamAV.Net
-ClamAV .net core client
+ClamAV .NETStandard 2.0 client
 
 [![Build status](https://ci.appveyor.com/api/projects/status/uep7igf5d3p9kbg2?svg=true)](https://ci.appveyor.com/project/petertsu/clamav-net)
 
-
+Usage example
 ```csharp
+private static async Task Main()
+{
+	const string connectionString = "tcp://127.0.0.1:3310";
+	const string eicarAvTest = @"X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
 
-            IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:3310"));
+	//Create a client
+	IClamAvClient clamAvClient = ClamAvClient.Create(new Uri(connectionString));
 
-            await clamAvClient.PingAsync();
+	//Send PING command to ClamAV
+	await clamAvClient.PingAsync().ConfigureAwait(false);
 
-            VersionResult result = await clamAvClient.GetVersionAsync();
+	//Get ClamAV engine and virus database version
+	VersionResult result = await clamAvClient.GetVersionAsync().ConfigureAwait(false);
 
-            Console.WriteLine(
-                $"ClamAV version - {result.ProgramVersion} , virus database version {result.VirusDbVersion}");
+	Console.WriteLine(
+		$"ClamAV version - {result.ProgramVersion} , virus database version {result.VirusDbVersion}");
 
-            using (HttpClient httpClient = new HttpClient())
-            {
-                await using Stream stream =
-                    await httpClient.GetStreamAsync("http://www.eicar.org/download/eicar.com.txt");
+	await using (MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(eicarAvTest)))
+	{
+		//Send a stream to ClamAV scan
+		ScanResult res = await clamAvClient.ScanDataAsync(memoryStream).ConfigureAwait(false);
 
-                ScanResult res = await clamAvClient.ScanDataAsync(stream);
-
-                Console.WriteLine($"Scan result : Infected - {res.Infected} , Virus name {res.VirusName}");
-            }
+		Console.WriteLine($"Scan result : Infected - {res.Infected} , Virus name {res.VirusName}");
+	}
+}
+```
+Output
+```
+ClamAV version - ClamAV 0.102.1 , virus database version 25779
+Scan result : Infected - True , Virus name Win.Test.EICAR_HDB-1
 ```
