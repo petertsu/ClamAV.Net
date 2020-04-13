@@ -20,7 +20,7 @@ namespace ClamAV.Net.Connection
 
         private void ValidateUri(Uri connectionUri)
         {
-            if(connectionUri == null)
+            if (connectionUri == null)
                 throw new ArgumentNullException(nameof(connectionUri));
 
             if (connectionUri.Scheme != "tcp")
@@ -31,8 +31,6 @@ namespace ClamAV.Net.Connection
 
             if (connectionUri.Port < 0)
                 throw new ArgumentException($"Invalid port {connectionUri.Port}", nameof(connectionUri));
-
-
         }
 
         public async Task<IConnection> CreateAsync(CancellationToken cancellationToken = default)

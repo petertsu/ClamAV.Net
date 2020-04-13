@@ -36,7 +36,7 @@ namespace ClamAV.Net.Socket
             {
                 do
                 {
-                    byte[] answerBytes = new byte[1024];
+                    byte[] answerBytes = new byte[mClamAvSettings.ReadBufferSize];
 
                     int numBytesRead;
 

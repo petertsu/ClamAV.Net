@@ -16,7 +16,8 @@ namespace ClamAV.Net.Tests.Connection
         [InlineData(null)]
         [InlineData("xx://server")]
         [InlineData("tcp:/server")]
-
+        [InlineData("tcp://server")]
+        
         public void Ctor_Parameter_Validation(string invalidUri)
         {
             if(invalidUri == null)

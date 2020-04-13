@@ -29,8 +29,11 @@ namespace ClamAV.Net.Tests.Socket
             testAction.Should().NotThrow();
         }
 
-        [Fact]
-        public async Task SendCommandAsync_Should_Send_Data_And_Read_Response()
+        [Theory]
+        [InlineData(1000)]
+        [InlineData(2)]
+
+        public async Task SendCommandAsync_Should_Send_Data_And_Read_Response(int readBufferSize)
         {
             int port = new Random().Next(55000, 56000);
            
@@ -40,7 +43,7 @@ namespace ClamAV.Net.Tests.Socket
             {
                 clamAvServerMock.Start(() => "PONG");
 
-                using TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.1", port));
+                using TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.1", port, readBufferSize));
                 await client.ConnectAsync().ConfigureAwait(false);
 
                 string result = await client.SendCommandAsync(new PingCommand()).ConfigureAwait(false);
