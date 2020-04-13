@@ -55,14 +55,18 @@ namespace ClamAV.Net.Commands
                 return Task.FromResult(new ScanResult(false));
 
             if (!actualResponse.EndsWith("FOUND", StringComparison.OrdinalIgnoreCase))
+            {
                 return Task.FromException<ScanResult>(
                     new ClamAvException($"Unexpected raw response '{actualResponse}'"));
+            }
 
             string[] responseParts = actualResponse.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
             if (responseParts.Length < 2)
+            {
                 return Task.FromException<ScanResult>(
                     new ClamAvException($"Invalid raw response '{actualResponse}'"));
+            }
 
             return Task.FromResult(new ScanResult(true, responseParts[1]));
         }

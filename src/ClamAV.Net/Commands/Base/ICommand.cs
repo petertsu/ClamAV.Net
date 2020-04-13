@@ -4,10 +4,6 @@ using System.Threading.Tasks;
 
 namespace ClamAV.Net.Commands.Base
 {
-    internal struct VoidResponse
-    {
-    }
-
     internal interface ICommand
 
     {

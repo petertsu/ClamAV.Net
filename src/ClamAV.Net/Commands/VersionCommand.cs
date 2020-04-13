@@ -28,8 +28,10 @@ namespace ClamAV.Net.Commands
                 StringSplitOptions.RemoveEmptyEntries);
 
             if (versions.Length < 2)
+            {
                 return Task.FromException<VersionResult>(
                     new ClamAvException($"Unexpected raw response '{actualResponse}'"));
+            }
 
             VersionResult versionResult = new VersionResult(versions[0], versions[1]);
 

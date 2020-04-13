@@ -14,6 +14,7 @@ namespace ClamAV.Net.Socket
     {
         private readonly Uri mConnectionString;
         private readonly TcpClient mClient;
+        private bool mDisposed;
 
         public TcpSocketClient(Uri connectionString)
         {
@@ -25,7 +26,8 @@ namespace ClamAV.Net.Socket
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
         {
-            await mClient.ConnectAsync(mConnectionString.Host, mConnectionString.Port);
+            cancellationToken.ThrowIfCancellationRequested();
+            await mClient.ConnectAsync(mConnectionString.Host, mConnectionString.Port).ConfigureAwait(false);
         }
 
         private async Task<byte[]> ReadResponse(CancellationToken cancellationToken)
@@ -55,15 +57,10 @@ namespace ClamAV.Net.Socket
                     }
                 } while (mClient.Available > 0);
 
-                Console.WriteLine($" {Encoding.UTF8.GetString(memoryStream.ToArray())}");
+                Console.WriteLine($"{Encoding.UTF8.GetString(memoryStream.ToArray())}");
 
                 return memoryStream.ToArray();
             }
-        }
-
-        public void Dispose()
-        {
-            mClient?.Dispose();
         }
 
         public async Task SendCommandAsync(ICommand command, CancellationToken cancellationToken = default)
@@ -80,6 +77,27 @@ namespace ClamAV.Net.Socket
             byte[] rawResponse = await ReadResponse(cancellationToken).ConfigureAwait(false);
 
             return await command.ProcessRawResponseAsync(rawResponse, cancellationToken).ConfigureAwait(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (mDisposed)
+                return;
+
+            mDisposed = true;
+
+            mClient?.Dispose();
+        }
+
+        ~TcpSocketClient()
+        {
+            Dispose(false);
         }
     }
 }

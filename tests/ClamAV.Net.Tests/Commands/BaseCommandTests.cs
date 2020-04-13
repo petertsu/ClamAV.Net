@@ -17,9 +17,9 @@ namespace ClamAV.Net.Tests.Commands
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void Base_Ctor_Validate_Name_Pramater(string name)
+        public void Base_Ctor_Validate_Name_Parameter(string name)
         {
-            Assert.Throws<ArgumentNullException>("name", () => new TestCommand(name));
+            Assert.Throws<ArgumentNullException>(nameof(name), () => new TestCommand(name));
         }
     }
 }

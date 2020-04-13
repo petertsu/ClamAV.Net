@@ -23,38 +23,36 @@ namespace ClamAV.Net.Tests.Client
         [Fact]
         public async Task GetVersionAsync_Should_Send_VersionCommand()
         {
-            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken
-                cancellationToken) mocks = CreateMocks();
+            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(mocks.connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object);
 
-            await clamAvClient.GetVersionAsync(mocks.cancellationToken);
+            await clamAvClient.GetVersionAsync(cancellationToken).ConfigureAwait(false);
 
-            mocks.connectionMock.Verify(
+            connectionMock.Verify(
                 mock => mock.SendCommandAsync(It.IsAny<VersionCommand>(),
-                    It.Is<CancellationToken>(ct => ct == mocks.cancellationToken)), Times.Once());
+                    It.Is<CancellationToken>(ct => ct == cancellationToken)), Times.Once());
 
-            mocks.connectionMock.Verify(
+            connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
         }
 
         [Fact]
         public async Task PingAsync_Should_Send_PingCommand()
         {
-            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken
-                cancellationToken) mocks = CreateMocks();
+            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(mocks.connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object);
 
-            await clamAvClient.PingAsync(mocks.cancellationToken);
+            await clamAvClient.PingAsync(cancellationToken).ConfigureAwait(false);
 
-            mocks.connectionMock.Verify(
+            connectionMock.Verify(
                 mock => mock.SendCommandAsync(It.IsAny<PingCommand>(),
-                    It.Is<CancellationToken>(ct => ct == mocks.cancellationToken)), Times.Once());
+                    It.Is<CancellationToken>(ct => ct == cancellationToken)), Times.Once());
 
-            mocks.connectionMock.Verify(
+            connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
         }
 
@@ -68,19 +66,18 @@ namespace ClamAV.Net.Tests.Client
         [Fact]
         public async Task ScanDataAsync_Should_Send_InStreamCommand()
         {
-            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken
-                cancellationToken) mocks = CreateMocks();
+            (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(mocks.connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object);
 
-            await clamAvClient.ScanDataAsync(Stream.Null, mocks.cancellationToken);
+            await clamAvClient.ScanDataAsync(Stream.Null, cancellationToken).ConfigureAwait(false);
 
-            mocks.connectionMock.Verify(
+            connectionMock.Verify(
                 mock => mock.SendCommandAsync(It.IsAny<InStreamCommand>(),
-                    It.Is<CancellationToken>(ct => ct == mocks.cancellationToken)), Times.Once());
+                    It.Is<CancellationToken>(ct => ct == cancellationToken)), Times.Once());
 
-            mocks.connectionMock.Verify(
+            connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
         }
 

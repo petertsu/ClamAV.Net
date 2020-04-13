@@ -58,7 +58,7 @@ namespace ClamAV.Net.Tests.Commands
             byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
 
             await Assert.ThrowsAsync<ClamAvException>(async () =>
-                await inStreamCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false));
+                await inStreamCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Theory]
@@ -83,7 +83,7 @@ namespace ClamAV.Net.Tests.Commands
         [Fact]
         public async Task WriteCommandAsync_Should_Write_CommandName_And_Data()
         {
-            byte[] dataToScan = {1, 2, 3, 4, 5};
+            byte[] dataToScan = { 1, 2, 3, 4, 5 };
 
             await using MemoryStream dataStream = new MemoryStream(dataToScan);
             await using MemoryStream commandProcessStream = new MemoryStream();
@@ -97,17 +97,16 @@ namespace ClamAV.Net.Tests.Commands
             string actualCommandName = Encoding.UTF8.GetString(actualCommandData, 0, inStreamCommand.Name.Length + 2);
 
             actualCommandName.Should()
-                .Be($"{Consts.COMMAND_PREFIX_CHARACTER}{inStreamCommand.Name}{(char) Consts.TERMINATION_BYTE}");
+                .Be($"{Consts.COMMAND_PREFIX_CHARACTER}{inStreamCommand.Name}{(char)Consts.TERMINATION_BYTE}");
 
             actualCommandData.Skip(actualCommandData.Length - 4).Should()
-                .BeEquivalentTo(new byte[] {0, 0, 0, 0}, "Termination bytes should exist");
+                .BeEquivalentTo(new byte[] { 0, 0, 0, 0 }, "Termination bytes should exist");
 
             actualCommandData.Skip(inStreamCommand.Name.Length + 2).SkipLast(4).Skip(4).Should()
                 .BeEquivalentTo(dataToScan, "Scan data should be equal");
 
             actualCommandData.Skip(inStreamCommand.Name.Length + 2).Take(4).Should()
-                .BeEquivalentTo(new byte[] {0, 0, 0, 5}, "Scan data size should be valid");
-
+                .BeEquivalentTo(new byte[] { 0, 0, 0, 5 }, "Scan data size should be valid");
         }
     }
 }
