@@ -81,7 +81,7 @@ namespace ClamAV.Net.Tests.Client
                 mock => mock.Dispose(), Times.Once());
         }
 
-        private (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) CreateMocks()
+        private static (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) CreateMocks()
         {
             (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) data = (
                     new Mock<IConnectionFactory>(),
