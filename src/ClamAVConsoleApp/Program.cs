@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using ClamAV.Net.Client;
 using ClamAV.Net.Client.Results;
@@ -12,24 +12,27 @@ namespace ClamAVConsoleApp
         private static async Task Main()
         {
             const string connectionString = "tcp://127.0.0.1:3310";
-            const string virusTestDownloadUri = "http://www.eicar.org/download/eicar.com.txt";
+            const string eicarAvTest = @"X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
 
+            //Create a client
             IClamAvClient clamAvClient = ClamAvClient.Create(new Uri(connectionString));
 
+            //Send PING command to ClamAV
             await clamAvClient.PingAsync().ConfigureAwait(false);
 
+            //Get ClamAV engine and virus database version
             VersionResult result = await clamAvClient.GetVersionAsync().ConfigureAwait(false);
 
             Console.WriteLine(
                 $"ClamAV version - {result.ProgramVersion} , virus database version {result.VirusDbVersion}");
 
-            using HttpClient httpClient = new HttpClient();
-            await using Stream stream =
-                await httpClient.GetStreamAsync(virusTestDownloadUri).ConfigureAwait(false);
+            await using (MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(eicarAvTest)))
+            {
+                //Send a stream to ClamAV scan
+                ScanResult res = await clamAvClient.ScanDataAsync(memoryStream).ConfigureAwait(false);
 
-            ScanResult res = await clamAvClient.ScanDataAsync(stream).ConfigureAwait(false);
-
-            Console.WriteLine($"Scan result : Infected - {res.Infected} , Virus name {res.VirusName}");
+                Console.WriteLine($"Scan result : Infected - {res.Infected} , Virus name {res.VirusName}");
+            }
         }
     }
 }

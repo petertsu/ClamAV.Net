@@ -56,8 +56,6 @@ namespace ClamAV.Net.Socket
                     }
                 } while (mClient.Available > 0);
 
-                Console.WriteLine($"{Encoding.UTF8.GetString(memoryStream.ToArray())}");
-
                 return memoryStream.ToArray();
             }
         }
