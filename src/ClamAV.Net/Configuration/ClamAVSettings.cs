@@ -15,7 +15,7 @@
 
         public override string ToString()
         {
-            return $"Server={Host}:{Port} {nameof(ReadBufferSize)}={ReadBufferSize}";
+            return $"Server={Host}:{Port} , parameters ({nameof(ReadBufferSize)}={ReadBufferSize})";
         }
     }
 }

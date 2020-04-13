@@ -7,6 +7,7 @@ namespace ClamAV.Net.Commands.Base
     internal interface ICommand
 
     {
+        string Name { get; }
         Task WriteCommandAsync(Stream stream, CancellationToken cancellationToken = default);
     }
 

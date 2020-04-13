@@ -15,7 +15,7 @@ namespace ClamAV.Net.Samples.Console
         {
             ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
                 builder.AddConsole(opt => opt.Format = ConsoleLoggerFormat.Systemd)
-                    .SetMinimumLevel(LogLevel.Information));
+                    .SetMinimumLevel(LogLevel.Trace));
 
             ILogger logger = loggerFactory.CreateLogger<Program>();
 
