@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClamAVConsoleApp", "ClamAVConsoleApp\ClamAVConsoleApp.csproj", "{B7E97526-3EDF-49E9-871E-214D3AF8F7AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClamAV.Net.Samples.Console", "ClamAV.Net.Samples.Console\ClamAV.Net.Samples.Console.csproj", "{B7E97526-3EDF-49E9-871E-214D3AF8F7AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClamAV.Net", "..\src\ClamAV.Net\ClamAV.Net.csproj", "{4E284927-EFC1-443E-BC27-D598404ACE71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B7E97526-3EDF-49E9-871E-214D3AF8F7AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7E97526-3EDF-49E9-871E-214D3AF8F7AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7E97526-3EDF-49E9-871E-214D3AF8F7AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E284927-EFC1-443E-BC27-D598404ACE71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E284927-EFC1-443E-BC27-D598404ACE71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E284927-EFC1-443E-BC27-D598404ACE71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E284927-EFC1-443E-BC27-D598404ACE71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
