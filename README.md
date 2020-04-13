@@ -17,6 +17,8 @@ ClamAV .NETStandard 2.0 client
 
 
 ## Usage example
+Create Uri in form "tcp://clamav-server:3310" and pass it to ClamAV.Net client
+
 ```csharp
 private static async Task Main()
 {
@@ -52,6 +54,8 @@ Scan result : Infected - True , Virus name Win.Test.EICAR_HDB-1
 ```
 
 ## Use .NET Core Logger
+ClamAV.Net client has optional parameter for Microsoft.Extensions.Logging.ILoggerFactory.
+
 ```csharp
 ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
                 builder.AddConsole(opt => opt.Format = ConsoleLoggerFormat.Systemd)
