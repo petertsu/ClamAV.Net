@@ -61,9 +61,7 @@ namespace ClamAV.Net.Socket
                             .ConfigureAwait(false);
                     }
                 } while (mClient.Available > 0);
-
-                mLogger.LogTrace($"End reading command response. Total {memoryStream.Length} bytes");
-
+                
                 return memoryStream.ToArray();
             }
         }
@@ -72,24 +70,24 @@ namespace ClamAV.Net.Socket
         {
             NetworkStream stream = mClient.GetStream();
 
-            mLogger.LogTrace("Start writing command to the network stream");
+            mLogger.LogTrace($"Start writing command '{command.Name}' to the network stream");
 
             await command.WriteCommandAsync(stream, cancellationToken).ConfigureAwait(false);
 
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
 
-            mLogger.LogTrace("End writing command to the network stream");
+            mLogger.LogTrace($"End writing command '{command.Name}' to the network stream");
         }
 
         public async Task<TResponse> SendCommandAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
         {
             await SendCommandAsync(command as ICommand, cancellationToken).ConfigureAwait(false);
 
-            mLogger.LogTrace("Start reading command response");
+            mLogger.LogTrace($"Start reading command '{command.Name}' response");
 
             byte[] rawResponse = await ReadResponse(cancellationToken).ConfigureAwait(false);
 
-            mLogger.LogTrace("End reading command response");
+            mLogger.LogTrace($"End reading command '{command.Name}' response. Total {rawResponse.Length} bytes");
 
             return await command.ProcessRawResponseAsync(rawResponse, cancellationToken).ConfigureAwait(false);
         }
