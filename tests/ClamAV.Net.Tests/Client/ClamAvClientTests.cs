@@ -7,6 +7,7 @@ using ClamAV.Net.Commands;
 using ClamAV.Net.Connection;
 using ClamAV.Net.Exceptions;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
@@ -18,7 +19,10 @@ namespace ClamAV.Net.Tests.Client
         public void Ctor_Parameter_Validation()
         {
             Assert.Throws<ArgumentNullException>("connectionFactory",
-               () => new ClamAvClient(null));
+                () => new ClamAvClient(null, new NullLogger<ClamAvClient>()));
+
+            Assert.Throws<ArgumentNullException>("logger",
+                () => new ClamAvClient(new Mock<IConnectionFactory>().Object, null));
         }
 
         [Fact]
@@ -27,7 +31,7 @@ namespace ClamAV.Net.Tests.Client
             (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object, new NullLogger<ClamAvClient>());
 
             await clamAvClient.GetVersionAsync(cancellationToken).ConfigureAwait(false);
 
@@ -45,7 +49,7 @@ namespace ClamAV.Net.Tests.Client
             (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object, new NullLogger<ClamAvClient>());
 
             await clamAvClient.PingAsync(cancellationToken).ConfigureAwait(false);
 
@@ -66,7 +70,7 @@ namespace ClamAV.Net.Tests.Client
             Exception thrownException = new Exception("Some error");
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object, new NullLogger<ClamAvClient>());
 
             connectionMock.Setup(
                 mock => mock.SendCommandAsync(It.IsAny<PingCommand>(),
@@ -90,7 +94,7 @@ namespace ClamAV.Net.Tests.Client
             ClamAvException thrownException = new ClamAvException("Some error");
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object, new NullLogger<ClamAvClient>());
 
             connectionMock.Setup(
                 mock => mock.SendCommandAsync(It.IsAny<PingCommand>(),
@@ -118,7 +122,7 @@ namespace ClamAV.Net.Tests.Client
             (Mock<IConnectionFactory> connectionFactoryMock, Mock<IConnection> connectionMock, CancellationToken cancellationToken) = CreateMocks();
 
             ClamAvClient clamAvClient =
-                new ClamAvClient(connectionFactoryMock.Object);
+                new ClamAvClient(connectionFactoryMock.Object, new NullLogger<ClamAvClient>());
 
             await clamAvClient.ScanDataAsync(Stream.Null, cancellationToken).ConfigureAwait(false);
 

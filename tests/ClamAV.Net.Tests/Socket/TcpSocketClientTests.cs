@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ClamAV.Net.Commands;
+using ClamAV.Net.Configuration;
 using ClamAV.Net.Socket;
 using ClamAV.Net.Tests.ClamAvServer;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace ClamAV.Net.Tests.Socket
@@ -13,13 +15,17 @@ namespace ClamAV.Net.Tests.Socket
         [Fact]
         public void Ctor_Validation()
         {
-            Assert.Throws<ArgumentNullException>("connectionUri", () => new TcpSocketClient(null));
+            Assert.Throws<ArgumentNullException>("clamAvSettings",
+                () => new TcpSocketClient(null, NullLogger<TcpSocketClient>.Instance));
+
+            Assert.Throws<ArgumentNullException>("logger",
+                () => new TcpSocketClient(new ClamAvSettings("127.0.0.1",111), null));
         }
 
         [Fact]
         public void Dispose_tests()
         {
-            TcpSocketClient client = new TcpSocketClient(new Uri("tcp://127.0.0.1:9090"));
+            TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.0", 33100), NullLogger<TcpSocketClient>.Instance);
 
             Action testAction = () => client.Dispose();
 
@@ -28,11 +34,12 @@ namespace ClamAV.Net.Tests.Socket
             testAction.Should().NotThrow();
         }
 
-        [Fact]
-        public async Task SendCommandAsync_Should_Send_Data_And_Read_Response()
+        [Theory]
+        [InlineData(1000)]
+        [InlineData(2)]
+        public async Task SendCommandAsync_Should_Send_Data_And_Read_Response(int readBufferSize)
         {
             int port = new Random().Next(55000, 56000);
-            Uri uri = new Uri($"tcp://127.0.0.1:{port}");
 
             ClamAvServerMock clamAvServerMock = new ClamAvServerMock(port);
 
@@ -40,7 +47,7 @@ namespace ClamAV.Net.Tests.Socket
             {
                 clamAvServerMock.Start(() => "PONG");
 
-                using TcpSocketClient client = new TcpSocketClient(uri);
+                using TcpSocketClient client = new TcpSocketClient(new ClamAvSettings("127.0.0.1", port, readBufferSize), NullLogger<TcpSocketClient>.Instance);
                 await client.ConnectAsync().ConfigureAwait(false);
 
                 string result = await client.SendCommandAsync(new PingCommand()).ConfigureAwait(false);

@@ -1,31 +1,37 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ClamAV.Net.ClamdProtocol;
 using ClamAV.Net.Commands.Base;
+using ClamAV.Net.Configuration;
 using ClamAV.Net.Connection;
+using Microsoft.Extensions.Logging;
 
 namespace ClamAV.Net.Socket
 {
     internal class TcpSocketClient : IConnection
     {
-        private readonly Uri mConnectionString;
+        private readonly ClamAvSettings mClamAvSettings;
+        private readonly ILogger<TcpSocketClient> mLogger;
         private readonly TcpClient mClient;
         private bool mDisposed;
 
-        public TcpSocketClient(Uri connectionUri)
+        public TcpSocketClient(ClamAvSettings clamAvSettings, ILogger<TcpSocketClient> logger)
         {
-            mConnectionString = connectionUri ?? throw new ArgumentNullException(nameof(connectionUri));
+            mClamAvSettings = clamAvSettings ?? throw new ArgumentNullException(nameof(clamAvSettings));
+            mLogger = logger ?? throw new ArgumentNullException(nameof(logger));
             mClient = new TcpClient();
         }
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await mClient.ConnectAsync(mConnectionString.Host, mConnectionString.Port).ConfigureAwait(false);
+
+            mLogger.LogTrace($"Connecting to {mClamAvSettings}");
+
+            await mClient.ConnectAsync(mClamAvSettings.Host, mClamAvSettings.Port).ConfigureAwait(false);
         }
 
         private async Task<byte[]> ReadResponse(CancellationToken cancellationToken)
@@ -36,7 +42,7 @@ namespace ClamAV.Net.Socket
             {
                 do
                 {
-                    byte[] answerBytes = new byte[1024];
+                    byte[] answerBytes = new byte[mClamAvSettings.ReadBufferSize];
 
                     int numBytesRead;
 
@@ -56,6 +62,8 @@ namespace ClamAV.Net.Socket
                     }
                 } while (mClient.Available > 0);
 
+                mLogger.LogTrace($"End reading command response. Total {memoryStream.Length} bytes");
+
                 return memoryStream.ToArray();
             }
         }
@@ -63,15 +71,25 @@ namespace ClamAV.Net.Socket
         public async Task SendCommandAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             NetworkStream stream = mClient.GetStream();
+
+            mLogger.LogTrace("Start writing command to the network stream");
+
             await command.WriteCommandAsync(stream, cancellationToken).ConfigureAwait(false);
+
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+
+            mLogger.LogTrace("End writing command to the network stream");
         }
 
         public async Task<TResponse> SendCommandAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
         {
             await SendCommandAsync(command as ICommand, cancellationToken).ConfigureAwait(false);
 
+            mLogger.LogTrace("Start reading command response");
+
             byte[] rawResponse = await ReadResponse(cancellationToken).ConfigureAwait(false);
+
+            mLogger.LogTrace("End reading command response");
 
             return await command.ProcessRawResponseAsync(rawResponse, cancellationToken).ConfigureAwait(false);
         }
@@ -90,6 +108,8 @@ namespace ClamAV.Net.Socket
             mDisposed = true;
 
             mClient?.Dispose();
+
+            mLogger?.LogTrace("Socket disposed");
         }
 
         ~TcpSocketClient()
