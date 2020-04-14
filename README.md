@@ -77,7 +77,6 @@ IClamAvClient clamAvClient = ClamAvClient.Create(new Uri("tcp://127.0.0.1:3310")
 ```
 
 
-
 ## Run ClamAV docker
 
 ```bash
