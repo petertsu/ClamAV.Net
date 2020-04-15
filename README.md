@@ -6,6 +6,7 @@ ClamAV .NETStandard 2.0 client
 [![Build status](https://ci.appveyor.com/api/projects/status/uep7igf5d3p9kbg2?svg=true)](https://ci.appveyor.com/project/petertsu/clamav-net)
 [![NuGet version](https://badge.fury.io/nu/ClamAV.Net.svg)](https://badge.fury.io/nu/ClamAV.Net)
 
+[![Known Vulnerabilities](https://snyk.io/test/github/petertsu/ClamAV.Net/badge.svg?targetFile=src/ClamAV.Net/ClamAV.Net.csproj)](https://snyk.io/test/github/petertsu/ClamAV.Net?targetFile=src/ClamAV.Net/ClamAV.Net.csproj)
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=bugs)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=petertsu_ClamAV.Net&metric=code_smells)](https://sonarcloud.io/dashboard?id=petertsu_ClamAV.Net)
