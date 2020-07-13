@@ -19,6 +19,8 @@ namespace ClamAV.Net.Client
     {
         private readonly IConnectionFactory mConnectionFactory;
         private readonly ILogger<ClamAvClient> mLogger;
+        private IConnection mConnection;
+        private readonly SemaphoreSlim mSemaphoreSlim = new SemaphoreSlim(1,1);
 
         /// <summary>
         /// Create ClamAV client
@@ -42,25 +44,22 @@ namespace ClamAV.Net.Client
             mLogger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        //private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
-        //{
-        //    using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
-        //        .ConfigureAwait(false))
-        //    {
-        //        await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
-        //    }
-        //}
-
         private async Task<TResponse> SendCommand<TResponse>(ICommand<TResponse> command,
             CancellationToken cancellationToken)
         {
             try
             {
-                using (IConnection connection = await mConnectionFactory.CreateAsync(cancellationToken)
-                    .ConfigureAwait(false))
+                await mSemaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+                if (mConnection == null || !mConnection.IsConnected)
                 {
-                    return await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
+                    await InitConnection(cancellationToken).ConfigureAwait(false);
+
+                    //open new session
+                    await mConnection.SendCommandAsync(new IdSessionCommand(), cancellationToken).ConfigureAwait(false);
                 }
+
+                return await mConnection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
             }
             catch (ClamAvException e)
             {
@@ -71,6 +70,10 @@ namespace ClamAV.Net.Client
             {
                 mLogger.LogError(e, "General error occured");
                 throw new ClamAvException("ClamAV client error occured", e);
+            }
+            finally
+            {
+                mSemaphoreSlim.Release();
             }
         }
 
@@ -113,6 +116,43 @@ namespace ClamAV.Net.Client
             mLogger.LogTrace($"Send {nameof(InStreamCommand)} to the server");
 
             return await SendCommand(new InStreamCommand(dataStream), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Dispose resources
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private async Task InitConnection(CancellationToken cancellationToken)
+        {
+            mConnection?.Dispose();
+
+            mConnection = await mConnectionFactory.CreateAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+                return;
+
+            if (mConnection?.IsConnected ?? false)
+                mConnection.SendCommandAsync(new EndCommand(), CancellationToken.None).Wait();
+
+            mConnection?.Dispose();
+        }
+
+        ~ClamAvClient()
+        {
+            Dispose(false);
         }
     }
 }
