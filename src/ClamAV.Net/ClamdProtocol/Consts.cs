@@ -9,6 +9,5 @@
         public const string INSTREAM_COMMAND = "INSTREAM";
         public const string IDSESSION_COMMAND = "IDSESSION";
         public const string END_COMMAND = "END";
-
     }
 }

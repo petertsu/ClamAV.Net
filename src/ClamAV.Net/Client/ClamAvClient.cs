@@ -51,7 +51,7 @@ namespace ClamAV.Net.Client
             {
                 await mSemaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-                if (mConnection == null || !mConnection.IsConnected)
+                if (!(mConnection?.IsConnected ?? false))
                 {
                     await InitConnection(cancellationToken).ConfigureAwait(false);
 

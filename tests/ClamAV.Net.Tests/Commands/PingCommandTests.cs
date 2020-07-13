@@ -39,7 +39,6 @@ namespace ClamAV.Net.Tests.Commands
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("DATA")]
-        [InlineData("PONG\0")]
         public async Task ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_exception(string rawData)
         {
             PingCommand pingCommand = new PingCommand();
