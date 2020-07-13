@@ -18,6 +18,8 @@ namespace ClamAV.Net.Socket
         private readonly TcpClient mClient;
         private bool mDisposed;
 
+        public bool IsConnected => mClient.Connected;
+
         public TcpSocketClient(ClamAvSettings clamAvSettings, ILogger<TcpSocketClient> logger)
         {
             mClamAvSettings = clamAvSettings ?? throw new ArgumentNullException(nameof(clamAvSettings));
@@ -61,7 +63,7 @@ namespace ClamAV.Net.Socket
                             .ConfigureAwait(false);
                     }
                 } while (mClient.Available > 0);
-                
+
                 return memoryStream.ToArray();
             }
         }

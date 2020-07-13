@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ClamAV.Net.Client.Results;
@@ -9,7 +10,7 @@ namespace ClamAV.Net.Client
     /// <summary>
     /// ClamAV client
     /// </summary>
-    public interface IClamAvClient
+    public interface IClamAvClient : IDisposable
     {
         /// <summary>
         /// Get ClamAV engine and database versions.

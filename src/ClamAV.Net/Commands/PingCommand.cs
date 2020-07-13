@@ -23,8 +23,8 @@ namespace ClamAV.Net.Commands
 
             string actualResponse = Encoding.UTF8.GetString(rawResponse);
 
-            return string.Equals(EXPECTED_RESPONSE, actualResponse, StringComparison.Ordinal)
-                ? Task.FromResult(actualResponse)
+            return actualResponse.Contains(EXPECTED_RESPONSE)
+                ? Task.FromResult(EXPECTED_RESPONSE)
                 : Task.FromException<string>(new ClamAvException($"Unexpected response '{actualResponse}'"));
         }
     }
