@@ -91,7 +91,7 @@ namespace ClamAV.Net.Socket
 
             mLogger.LogTrace($"End reading command '{command.Name}' response. Total {rawResponse.Length} bytes");
 
-            return await command.ProcessRawResponseAsync(rawResponse, cancellationToken).ConfigureAwait(false);
+            return command.ProcessRawResponse(rawResponse);
         }
 
         public void Dispose()

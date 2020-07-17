@@ -16,26 +16,23 @@ namespace ClamAV.Net.Commands
         {
         }
 
-        public Task<VersionResult> ProcessRawResponseAsync(byte[] rawResponse,
-            CancellationToken cancellationToken = default)
+        public VersionResult ProcessRawResponse(byte[] rawResponse)
         {
             if (rawResponse == null)
-                return Task.FromException<VersionResult>(new ClamAvException("Raw response is null"));
+                throw new ClamAvException("Raw response is null");
 
-            string actualResponse = Encoding.UTF8.GetString(rawResponse);
+            string actualResponse = Encoding.ASCII.GetString(rawResponse);
 
-            string[] versions = actualResponse.Split(new[] { Path.AltDirectorySeparatorChar.ToString() },
+            string[] versions = actualResponse.Split(new[] {Path.AltDirectorySeparatorChar.ToString()},
                 StringSplitOptions.RemoveEmptyEntries);
 
             if (versions.Length < 2)
             {
-                return Task.FromException<VersionResult>(
-                    new ClamAvException($"Unexpected raw response '{actualResponse}'"));
+                throw
+                    new ClamAvException($"Unexpected raw response '{actualResponse}'");
             }
 
-            VersionResult versionResult = new VersionResult(versions[0], versions[1]);
-
-            return Task.FromResult(versionResult);
+            return new VersionResult(versions[0], versions[1]);
         }
     }
 }

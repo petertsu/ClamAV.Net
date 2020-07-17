@@ -11,9 +11,9 @@ namespace ClamAV.Net.Commands.Base
         Task WriteCommandAsync(Stream stream, CancellationToken cancellationToken = default);
     }
 
-    internal interface ICommand<TResponse> : ICommand
+    internal interface ICommand<out TResponse> : ICommand
 
     {
-        Task<TResponse> ProcessRawResponseAsync(byte[] rawResponse, CancellationToken cancellationToken = default);
+        TResponse ProcessRawResponse(byte[] rawResponse);
     }
 }

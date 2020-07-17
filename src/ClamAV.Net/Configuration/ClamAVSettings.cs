@@ -2,7 +2,7 @@
 {
     internal class ClamAvSettings
     {
-        public ClamAvSettings(string host, int port, int readBufferSize = 1024)
+        public ClamAvSettings(string host, int port, int readBufferSize = 512)
         {
             Host = host;
             Port = port;
