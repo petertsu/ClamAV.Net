@@ -17,6 +17,7 @@ namespace ClamAV.Net.Socket
         private readonly ILogger<TcpSocketClient> mLogger;
         private readonly TcpClient mClient;
         private bool mDisposed;
+        private NetworkStream mNetworkStream;
 
         public bool IsConnected => mClient.Connected;
 
@@ -34,49 +35,46 @@ namespace ClamAV.Net.Socket
             mLogger.LogTrace($"Connecting to {mClamAvSettings}");
 
             await mClient.ConnectAsync(mClamAvSettings.Host, mClamAvSettings.Port).ConfigureAwait(false);
+
+            mLogger.LogTrace($"Connected to {mClamAvSettings} {mClient.SendBufferSize} {mClient.ReceiveBufferSize}");
+
+            mClient.NoDelay = true;
+            mNetworkStream = mClient.GetStream();
         }
 
         private async Task<byte[]> ReadResponse(CancellationToken cancellationToken)
         {
-            NetworkStream stream = mClient.GetStream();
+            await using MemoryStream memoryStream = new MemoryStream();
 
-            using (MemoryStream memoryStream = new MemoryStream())
+            do
             {
-                do
+                byte[] answerBytes = new byte[mClamAvSettings.ReadBufferSize];
+
+                int numBytesRead;
+
+                while ((numBytesRead = await mNetworkStream
+                    .ReadAsync(answerBytes, 0, answerBytes.Length, cancellationToken)
+                    .ConfigureAwait(false)) > 0)
                 {
-                    byte[] answerBytes = new byte[mClamAvSettings.ReadBufferSize];
-
-                    int numBytesRead;
-
-                    while ((numBytesRead = await stream.ReadAsync(answerBytes, 0, answerBytes.Length, cancellationToken)
-                        .ConfigureAwait(false)) > 0)
+                    if (numBytesRead < answerBytes.Length &&
+                        answerBytes[numBytesRead - 1] == Consts.TERMINATION_BYTE)
                     {
-                        if (numBytesRead < answerBytes.Length &&
-                            answerBytes[numBytesRead - 1] == Consts.TERMINATION_BYTE)
-                        {
-                            await memoryStream.WriteAsync(answerBytes, 0, numBytesRead - 1, cancellationToken)
-                                .ConfigureAwait(false);
-                            break;
-                        }
-
-                        await memoryStream.WriteAsync(answerBytes, 0, numBytesRead, cancellationToken)
-                            .ConfigureAwait(false);
+                        memoryStream.Write(answerBytes, 0, numBytesRead - 1);
+                        break;
                     }
-                } while (mClient.Available > 0);
 
-                return memoryStream.ToArray();
-            }
+                    memoryStream.Write(answerBytes, 0, numBytesRead);
+                }
+            } while (mClient.Available > 0);
+
+            return memoryStream.ToArray();
         }
 
         public async Task SendCommandAsync(ICommand command, CancellationToken cancellationToken = default)
         {
-            NetworkStream stream = mClient.GetStream();
-
             mLogger.LogTrace($"Start writing command '{command.Name}' to the network stream");
 
-            await command.WriteCommandAsync(stream, cancellationToken).ConfigureAwait(false);
-
-            await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+            await command.WriteCommandAsync(mNetworkStream, cancellationToken).ConfigureAwait(false);
 
             mLogger.LogTrace($"End writing command '{command.Name}' to the network stream");
         }

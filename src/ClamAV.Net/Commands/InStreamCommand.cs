@@ -63,13 +63,13 @@ namespace ClamAV.Net.Commands
 
             string[] responseParts = actualResponse.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (responseParts.Length < 4)
+            if (responseParts.Length < 3)
             {
                 throw
                     new ClamAvException($"Invalid raw response '{actualResponse}'");
             }
 
-            return new ScanResult(true, responseParts[2]);
+            return new ScanResult(true, responseParts[^2]);
         }
     }
 }

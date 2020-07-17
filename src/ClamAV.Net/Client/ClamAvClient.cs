@@ -83,11 +83,11 @@ namespace ClamAV.Net.Client
         /// </summary>
         /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
-        public async Task<VersionResult> GetVersionAsync(CancellationToken cancellationToken = default)
+        public Task<VersionResult> GetVersionAsync(CancellationToken cancellationToken = default)
         {
             mLogger.LogTrace($"Send {nameof(VersionCommand)} to the server");
 
-            return await SendCommand(new VersionCommand(), cancellationToken).ConfigureAwait(false);
+            return SendCommand(new VersionCommand(), cancellationToken);
         }
 
         /// <summary>
@@ -96,11 +96,11 @@ namespace ClamAV.Net.Client
         /// </summary>
         /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
-        public async Task PingAsync(CancellationToken cancellationToken = default)
+        public Task PingAsync(CancellationToken cancellationToken = default)
         {
             mLogger.LogTrace($"Send {nameof(PingCommand)} to the server");
 
-            await SendCommand(new PingCommand(), cancellationToken).ConfigureAwait(false);
+            return SendCommand(new PingCommand(), cancellationToken);
         }
 
         /// <summary>
@@ -111,13 +111,12 @@ namespace ClamAV.Net.Client
         /// /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <returns>ScanResult</returns>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
-        public async Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default)
+        public Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default)
         {
             mLogger.LogTrace($"Send {nameof(InStreamCommand)} to the server");
 
-            return await SendCommand(new InStreamCommand(dataStream), cancellationToken).ConfigureAwait(false);
+            return SendCommand(new InStreamCommand(dataStream), cancellationToken);
         }
-
 
         /// <summary>
         /// Scan a stream of data. The stream is sent to ClamAV in chunks.
@@ -127,13 +126,12 @@ namespace ClamAV.Net.Client
         /// /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <returns>ScanResult</returns>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
-        public async Task<ScanResult> ScanRemotePathAsync(string remotePath, CancellationToken cancellationToken = default)
+        public Task<ScanResult> ScanRemotePathAsync(string remotePath, CancellationToken cancellationToken = default)
         {
             mLogger.LogTrace($"Send {nameof(ScanCommand)} to the server");
 
-            return await SendCommand(new ScanCommand(remotePath), cancellationToken).ConfigureAwait(false);
+            return SendCommand(new ScanCommand(remotePath), cancellationToken);
         }
-
 
         /// <summary>
         /// Dispose resources
@@ -167,6 +165,8 @@ namespace ClamAV.Net.Client
             mConnection?.Dispose();
         }
 
+        /// <summary>
+        /// </summary>
         ~ClamAvClient()
         {
             Dispose(false);
