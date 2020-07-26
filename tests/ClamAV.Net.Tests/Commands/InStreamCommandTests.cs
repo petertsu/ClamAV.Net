@@ -48,7 +48,7 @@ namespace ClamAV.Net.Tests.Commands
         [InlineData("stream: OK\0")]
         [InlineData("ERROR")]
         [InlineData("FOUND")]
-        public async Task ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_Exception(string rawData)
+        public void ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_Exception(string rawData)
         {
             Mock<Stream> mock = new Mock<Stream>();
             mock.Setup(stream => stream.CanRead).Returns(true);
@@ -57,14 +57,13 @@ namespace ClamAV.Net.Tests.Commands
 
             byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
 
-            await Assert.ThrowsAsync<ClamAvException>(async () =>
-                await inStreamCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Throws<ClamAvException>(() => inStreamCommand.ProcessRawResponse(rawBytes));
         }
 
         [Theory]
         [InlineData("stream: Win.Test.EICAR_HDB-1 FOUND", true, "Win.Test.EICAR_HDB-1")]
         [InlineData("stream: OK", false, null)]
-        public async Task ProcessRawResponseAsync_Valid_Raw_Data_Should_Return_ScanResult(string rawData,
+        public void ProcessRawResponseAsync_Valid_Raw_Data_Should_Return_ScanResult(string rawData,
             bool expectedInfected, string expectedVirusName)
         {
             Mock<Stream> mock = new Mock<Stream>();
@@ -72,8 +71,7 @@ namespace ClamAV.Net.Tests.Commands
 
             InStreamCommand inStreamCommand = new InStreamCommand(mock.Object);
 
-            ScanResult actualResult = await inStreamCommand.ProcessRawResponseAsync(Encoding.UTF8.GetBytes(rawData))
-                .ConfigureAwait(false);
+            ScanResult actualResult = inStreamCommand.ProcessRawResponse(Encoding.UTF8.GetBytes(rawData));
 
             actualResult.Should().NotBeNull();
             actualResult.Infected.Should().Be(expectedInfected);

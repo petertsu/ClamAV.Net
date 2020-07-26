@@ -42,17 +42,17 @@ namespace ClamAV.Net.Tests.Commands
         [InlineData(" ")]
         [InlineData("ERROR")]
         [InlineData("ClamAV 1.17.99/")]
-        public async Task ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_exception(string rawData)
+        public void ProcessRawResponseAsync_Invalid_Raw_Data_Should_Throw_exception(string rawData)
         {
             VersionCommand versionCommand = new VersionCommand();
 
             byte[] rawBytes = rawData == null ? null : Encoding.UTF8.GetBytes(rawData);
 
-            await Assert.ThrowsAsync<ClamAvException>(async () => await versionCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Throws<ClamAvException>(() => versionCommand.ProcessRawResponse(rawBytes));
         }
 
         [Fact]
-        public async Task ProcessRawResponseAsync_Valid_Raw_Data_Should_Return_PONG()
+        public void ProcessRawResponseAsync_Valid_Raw_Data_Should_Return_PONG()
         {
             VersionCommand versionCommand = new VersionCommand();
 
@@ -61,7 +61,7 @@ namespace ClamAV.Net.Tests.Commands
 
             byte[] rawBytes = Encoding.UTF8.GetBytes($"{expectedProgramVersion}/{expectedVirusDbVersion}/{DateTime.Now}");
 
-            VersionResult actual = await versionCommand.ProcessRawResponseAsync(rawBytes).ConfigureAwait(false);
+            VersionResult actual = versionCommand.ProcessRawResponse(rawBytes);
 
             actual.ProgramVersion.Should().Be(expectedProgramVersion);
             actual.VirusDbVersion.Should().Be(expectedVirusDbVersion);

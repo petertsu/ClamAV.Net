@@ -19,6 +19,8 @@ namespace ClamAV.Net.Client
     {
         private readonly IConnectionFactory mConnectionFactory;
         private readonly ILogger<ClamAvClient> mLogger;
+        private IConnection mConnection;
+        private readonly SemaphoreSlim mSemaphoreSlim = new SemaphoreSlim(1,1);
 
         /// <summary>
         /// Create ClamAV client
@@ -42,25 +44,22 @@ namespace ClamAV.Net.Client
             mLogger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        //private async Task SendCommand(ICommand command, CancellationToken cancellationToken)
-        //{
-        //    using (IConnection connection = await mConnectionFactory.CreateAsync(mConnectionUri, cancellationToken)
-        //        .ConfigureAwait(false))
-        //    {
-        //        await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
-        //    }
-        //}
-
         private async Task<TResponse> SendCommand<TResponse>(ICommand<TResponse> command,
             CancellationToken cancellationToken)
         {
             try
             {
-                using (IConnection connection = await mConnectionFactory.CreateAsync(cancellationToken)
-                    .ConfigureAwait(false))
+                await mSemaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+                if (!(mConnection?.IsConnected ?? false))
                 {
-                    return await connection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
+                    await InitConnection(cancellationToken).ConfigureAwait(false);
+
+                    //open new session
+                    await mConnection.SendCommandAsync(new IdSessionCommand(), cancellationToken).ConfigureAwait(false);
                 }
+
+                return await mConnection.SendCommandAsync(command, cancellationToken).ConfigureAwait(false);
             }
             catch (ClamAvException e)
             {
@@ -72,6 +71,10 @@ namespace ClamAV.Net.Client
                 mLogger.LogError(e, "General error occured");
                 throw new ClamAvException("ClamAV client error occured", e);
             }
+            finally
+            {
+                mSemaphoreSlim.Release();
+            }
         }
 
         /// <summary>
@@ -80,11 +83,11 @@ namespace ClamAV.Net.Client
         /// </summary>
         /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
-        public async Task<VersionResult> GetVersionAsync(CancellationToken cancellationToken = default)
+        public Task<VersionResult> GetVersionAsync(CancellationToken cancellationToken = default)
         {
             mLogger.LogTrace($"Send {nameof(VersionCommand)} to the server");
 
-            return await SendCommand(new VersionCommand(), cancellationToken).ConfigureAwait(false);
+            return SendCommand(new VersionCommand(), cancellationToken);
         }
 
         /// <summary>
@@ -93,11 +96,11 @@ namespace ClamAV.Net.Client
         /// </summary>
         /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
-        public async Task PingAsync(CancellationToken cancellationToken = default)
+        public Task PingAsync(CancellationToken cancellationToken = default)
         {
             mLogger.LogTrace($"Send {nameof(PingCommand)} to the server");
 
-            await SendCommand(new PingCommand(), cancellationToken).ConfigureAwait(false);
+            return SendCommand(new PingCommand(), cancellationToken);
         }
 
         /// <summary>
@@ -108,11 +111,65 @@ namespace ClamAV.Net.Client
         /// /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
         /// <returns>ScanResult</returns>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
-        public async Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default)
+        public Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default)
         {
             mLogger.LogTrace($"Send {nameof(InStreamCommand)} to the server");
 
-            return await SendCommand(new InStreamCommand(dataStream), cancellationToken).ConfigureAwait(false);
+            return SendCommand(new InStreamCommand(dataStream), cancellationToken);
+        }
+
+        /// <summary>
+        /// Scan a stream of data. The stream is sent to ClamAV in chunks.
+        /// Run SCAN command on the ClamAV server
+        /// </summary>
+        /// <param name="remotePath">Path on the ClamAV server</param>
+        /// /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
+        /// <returns>ScanResult</returns>
+        /// <exception cref="ClamAvException">Thrown when command failed</exception>
+        public Task<ScanResult> ScanRemotePathAsync(string remotePath, CancellationToken cancellationToken = default)
+        {
+            mLogger.LogTrace($"Send {nameof(ScanCommand)} to the server");
+
+            return SendCommand(new ScanCommand(remotePath), cancellationToken);
+        }
+
+        /// <summary>
+        /// Dispose resources
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private async Task InitConnection(CancellationToken cancellationToken)
+        {
+            mConnection?.Dispose();
+
+            mConnection = await mConnectionFactory.CreateAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+                return;
+
+            if (mConnection?.IsConnected ?? false)
+                mConnection.SendCommandAsync(new EndCommand(), CancellationToken.None).Wait();
+
+            mConnection?.Dispose();
+        }
+
+        /// <summary>
+        /// </summary>
+        ~ClamAvClient()
+        {
+            Dispose(false);
         }
     }
 }

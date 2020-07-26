@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ClamAV.Net.Client.Results;
@@ -9,7 +10,7 @@ namespace ClamAV.Net.Client
     /// <summary>
     /// ClamAV client
     /// </summary>
-    public interface IClamAvClient
+    public interface IClamAvClient : IDisposable
     {
         /// <summary>
         /// Get ClamAV engine and database versions.
@@ -37,5 +38,17 @@ namespace ClamAV.Net.Client
         /// <returns>ScanResult</returns>
         /// <exception cref="ClamAvException">Thrown when command failed</exception>
         Task<ScanResult> ScanDataAsync(Stream dataStream, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Scan a stream of data. The stream is sent to ClamAV in chunks.
+        /// Run SCAN command on the ClamAV server
+        /// </summary>
+        /// <param name="remotePath">Path on the ClamAV server</param>
+        /// /// <param name="cancellationToken">Cancellation token used to operation cancel</param>
+        /// <returns>ScanResult</returns>
+        /// <exception cref="ClamAvException">Thrown when command failed</exception>
+
+        Task<ScanResult> ScanRemotePathAsync(string remotePath, CancellationToken cancellationToken = default);
+
     }
 }

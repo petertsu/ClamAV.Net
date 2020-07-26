@@ -25,8 +25,10 @@ namespace ClamAV.Net.Commands
 
         protected override async Task WriteCommandDataAsync(Stream stream, CancellationToken cancellationToken)
         {
-            byte[] dataChunk = new byte[1024];
+            byte[] dataChunk = new byte[64 * 1024]; //Under 85K for LOH
             int numBytesRead;
+
+            mDataStream.Seek(0, SeekOrigin.Begin);
 
             while ((numBytesRead = await mDataStream.ReadAsync(dataChunk, 0, dataChunk.Length, cancellationToken)
                 .ConfigureAwait(false)) > 0)
@@ -43,32 +45,31 @@ namespace ClamAV.Net.Commands
             await stream.WriteAsync(end, 0, end.Length, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task<ScanResult> ProcessRawResponseAsync(byte[] rawResponse,
-            CancellationToken cancellationToken = default)
+        public ScanResult ProcessRawResponse(byte[] rawResponse)
         {
             if (rawResponse == null)
-                return Task.FromException<ScanResult>(new ClamAvException("Raw response is null"));
+                throw new ClamAvException("Raw response is null");
 
-            string actualResponse = Encoding.UTF8.GetString(rawResponse);
+            string actualResponse = Encoding.ASCII.GetString(rawResponse);
 
             if (actualResponse.EndsWith("OK", StringComparison.OrdinalIgnoreCase))
-                return Task.FromResult(new ScanResult(false));
+                return new ScanResult(false);
 
             if (!actualResponse.EndsWith("FOUND", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromException<ScanResult>(
-                    new ClamAvException($"Unexpected raw response '{actualResponse}'"));
+                throw
+                    new ClamAvException($"Unexpected raw response '{actualResponse}'");
             }
 
             string[] responseParts = actualResponse.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (responseParts.Length < 2)
+            if (responseParts.Length < 3)
             {
-                return Task.FromException<ScanResult>(
-                    new ClamAvException($"Invalid raw response '{actualResponse}'"));
+                throw
+                    new ClamAvException($"Invalid raw response '{actualResponse}'");
             }
 
-            return Task.FromResult(new ScanResult(true, responseParts[1]));
+            return new ScanResult(true, responseParts[^2]);
         }
     }
 }

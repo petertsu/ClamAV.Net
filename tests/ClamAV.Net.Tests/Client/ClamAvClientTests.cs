@@ -39,6 +39,8 @@ namespace ClamAV.Net.Tests.Client
                 mock => mock.SendCommandAsync(It.IsAny<VersionCommand>(),
                     It.Is<CancellationToken>(ct => ct == cancellationToken)), Times.Once());
 
+            clamAvClient.Dispose();
+
             connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
         }
@@ -56,6 +58,8 @@ namespace ClamAV.Net.Tests.Client
             connectionMock.Verify(
                 mock => mock.SendCommandAsync(It.IsAny<PingCommand>(),
                     It.Is<CancellationToken>(ct => ct == cancellationToken)), Times.Once());
+
+            clamAvClient.Dispose();
 
             connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
@@ -81,6 +85,8 @@ namespace ClamAV.Net.Tests.Client
 
             actualException.InnerException.Should().BeEquivalentTo(thrownException);
 
+            clamAvClient.Dispose();
+
             connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
         }
@@ -104,6 +110,8 @@ namespace ClamAV.Net.Tests.Client
                 await clamAvClient.PingAsync(cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
 
             actualException.Should().BeEquivalentTo(thrownException);
+
+            clamAvClient.Dispose();
 
             connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());
@@ -129,6 +137,8 @@ namespace ClamAV.Net.Tests.Client
             connectionMock.Verify(
                 mock => mock.SendCommandAsync(It.IsAny<InStreamCommand>(),
                     It.Is<CancellationToken>(ct => ct == cancellationToken)), Times.Once());
+
+            clamAvClient.Dispose();
 
             connectionMock.Verify(
                 mock => mock.Dispose(), Times.Once());

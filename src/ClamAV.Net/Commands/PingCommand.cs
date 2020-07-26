@@ -16,16 +16,16 @@ namespace ClamAV.Net.Commands
         {
         }
 
-        public Task<string> ProcessRawResponseAsync(byte[] rawResponse, CancellationToken cancellationToken = default)
+        public string ProcessRawResponse(byte[] rawResponse)
         {
             if (rawResponse == null)
-                return Task.FromException<string>(new ClamAvException("Raw response is null"));
+                throw new ClamAvException("Raw response is null");
 
             string actualResponse = Encoding.UTF8.GetString(rawResponse);
 
-            return string.Equals(EXPECTED_RESPONSE, actualResponse, StringComparison.Ordinal)
-                ? Task.FromResult(actualResponse)
-                : Task.FromException<string>(new ClamAvException($"Unexpected response '{actualResponse}'"));
+            return actualResponse.Contains(EXPECTED_RESPONSE)
+                ? EXPECTED_RESPONSE
+                : throw new ClamAvException($"Unexpected response '{actualResponse}'");
         }
     }
 }

@@ -10,5 +10,7 @@ namespace ClamAV.Net.Connection
         Task SendCommandAsync(ICommand command, CancellationToken cancellationToken = default);
 
         Task<TResponse> SendCommandAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
+
+        bool IsConnected { get; }
     }
 }
