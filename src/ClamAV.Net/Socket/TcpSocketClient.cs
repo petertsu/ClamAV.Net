@@ -44,7 +44,7 @@ namespace ClamAV.Net.Socket
 
         private async Task<byte[]> ReadResponse(CancellationToken cancellationToken)
         {
-            await using MemoryStream memoryStream = new MemoryStream();
+            using MemoryStream memoryStream = new MemoryStream();
 
             do
             {
