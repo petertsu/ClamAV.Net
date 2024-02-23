@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFrameworks>netstandard2.1;netstandard2.0;</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>petertsu@github</Authors>
 		<Product>ClamAV.Net</Product>
@@ -19,6 +19,7 @@
 		<Copyright>Copyright 2020 petertsu@github</Copyright>
 		<Summary>The ClamAV server .NETStandard client</Summary>
 		<ProjectGuid>4E284927-EFC1-443E-BC27-D598404ACE71</ProjectGuid>
+		<LangVersion>12.0</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup>
 	  <DocumentationFile>ClamAV.Net.xml</DocumentationFile>

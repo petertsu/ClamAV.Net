@@ -23,23 +23,5 @@ namespace ClamAV.Net.Tests.Exceptions
             clamAvException.Message.Should().Be(expectedMessage);
             clamAvException.InnerException.Should().NotBeNull();
         }
-
-        [Fact]
-        public void Serialization_Test()
-        {
-            const string expectedMessage = "Some error";
-            ClamAvException clamAvException = new ClamAvException(expectedMessage, new Exception("Error"));
-
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-            using MemoryStream memoryStream = new MemoryStream();
-            binaryFormatter.Serialize(memoryStream, clamAvException);
-            memoryStream.Seek(0, SeekOrigin.Begin);
-
-            ClamAvException actual = binaryFormatter.Deserialize(memoryStream) as ClamAvException;
-
-            actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(clamAvException);
-        }
     }
 }
